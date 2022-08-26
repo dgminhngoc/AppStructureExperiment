@@ -6,8 +6,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.myapplication.models.User
 
 interface IUserPreferencesRepository {
-    suspend fun getUser(): User
-    suspend fun saveUser(user: User)
+    suspend fun getUser(): User?
+    suspend fun saveUser(user: User?)
 }
 
 private object PreferencesKeys {
@@ -18,7 +18,7 @@ class UserPreferencesRepository(
     private val dataStore: DataStore<Preferences>,
 ): IUserPreferencesRepository{
 
-    override suspend fun getUser(): User {
+    override suspend fun getUser(): User? {
         return User(
             id = 0,
             email = "tim.nguyen@solunar.de",
@@ -30,7 +30,7 @@ class UserPreferencesRepository(
         )
     }
 
-    override suspend fun saveUser(user: User) {
+    override suspend fun saveUser(user: User?) {
 
     }
 

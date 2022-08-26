@@ -273,16 +273,16 @@ class DataRepository: IDataRepository {
 
             when(response.status) {
                 HttpStatusCode.OK -> {
-                    val newUser = User(
+                    this.user = User(
                         id = 0,
                         email = "tim.nguyen@solunar.de",
                         firstName = "Tim",
                         lastName = "Nguyen",
                         accessToken = "access_token",
                         refreshToken = "refresh_token",
-                        userRole = "user"
+                        userRole = "ROLE_USER"
                     )
-                    return RequestResult.OnSuccess(data = newUser)
+                    return RequestResult.OnSuccess(data = this.user)
                 }
                 else -> {
                     errorCode = response.status.value

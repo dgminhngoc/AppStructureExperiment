@@ -55,18 +55,11 @@ class AppViewModel(
             return _mainScreenViewModel!!
         }
 
-    lateinit var userDataState: MutableState<User>
-        private set
-
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
     init {
          CoroutineScope(defaultDispatcher).launch {
-             val user = withContext(defaultDispatcher){
-                prefsRepository.getUser()
-             }
-
-             userDataState = mutableStateOf(user)
+             //init data here
              selectedScreenIndexState.value = AppScreen.LOGIN
         }
     }
@@ -74,8 +67,7 @@ class AppViewModel(
     fun onUIEvent(event: UIEvent) {
         when(event) {
             is UIEvent.Login -> {
-                userDataState.value = event.user
-                login()
+                login(event.user)
             }
             is UIEvent.Logout -> {
                 logout()
@@ -83,7 +75,11 @@ class AppViewModel(
         }
     }
 
-    private fun login() {
+    private fun login(user: User) {
+        CoroutineScope(defaultDispatcher).launch {
+            prefsRepository.saveUser(user)
+        }
+
         selectedScreenIndexState.value = AppScreen.MAIN
 
         _loginScreenViewModel?.dispose()
