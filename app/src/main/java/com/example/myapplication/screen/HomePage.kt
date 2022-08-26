@@ -6,7 +6,7 @@ import com.example.myapplication.viewmodel.HomePageViewModel
 
 @Composable
 fun HomePage(
-    viewModel: HomePageViewModel = HomePageViewModel()
+    homePageViewModel: HomePageViewModel
 ) {
     Text(text = "Home Page")
 }

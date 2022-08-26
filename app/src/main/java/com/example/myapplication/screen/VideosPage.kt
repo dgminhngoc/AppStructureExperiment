@@ -6,7 +6,7 @@ import com.example.myapplication.viewmodel.VideosPageViewModel
 
 @Composable
 fun VideosPage(
-    viewModel: VideosPageViewModel = VideosPageViewModel()
+    videosPageViewModel: VideosPageViewModel = VideosPageViewModel()
 ) {
     Text(text = "Video Screen")
 }

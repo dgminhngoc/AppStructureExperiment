@@ -6,7 +6,7 @@ import com.example.myapplication.viewmodel.ContactsPageViewModel
 
 @Composable
 fun ContactsPage(
-    viewModel: ContactsPageViewModel = ContactsPageViewModel()
+    contactsPageViewModel: ContactsPageViewModel
 ) {
     Text(text = "Contact Screen")
 }

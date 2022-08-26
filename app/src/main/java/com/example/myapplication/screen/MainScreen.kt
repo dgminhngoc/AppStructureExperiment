@@ -6,16 +6,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.viewmodel.BottomNavTab
 import com.example.myapplication.viewmodel.MainScreenEvent
 import com.example.myapplication.viewmodel.MainScreenViewModel
 
-@Preview
 @Composable
 fun MainScreen(
-    viewModel: MainScreenViewModel = MainScreenViewModel(),
+    mainScreenViewModel: MainScreenViewModel
 ) {
     val items = listOf("News", "Videos", "Products", "Contacts")
     Scaffold(
@@ -27,8 +25,8 @@ fun MainScreen(
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
                         label = { Text(item) },
-                        selected = viewModel.selectedTabIndexState.value.index == index,
-                        onClick = { viewModel.onEvent(when(index) {
+                        selected = mainScreenViewModel.selectedTabIndexState.value.index == index,
+                        onClick = { mainScreenViewModel.onEvent(when(index) {
                             0 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.HOME)
                             1 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.VIDEOS)
                             2 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.PRODUCTS)
@@ -41,25 +39,25 @@ fun MainScreen(
         },
         content = {
             Box(modifier = Modifier.padding(it)) {
-                when(viewModel.selectedTabIndexState.value) {
+                when(mainScreenViewModel.selectedTabIndexState.value) {
                     BottomNavTab.HOME -> {
                         HomePage(
-                            viewModel = viewModel.homePageViewModel
+                            homePageViewModel = mainScreenViewModel.homePageViewModel
                         )
                     }
                     BottomNavTab.VIDEOS -> {
                         VideosPage(
-                            viewModel = viewModel.videosPageViewModel
+                            videosPageViewModel = mainScreenViewModel.videosPageViewModel
                         )
                     }
                     BottomNavTab.PRODUCTS -> {
                         ProductsPage(
-                            viewModel = viewModel.productsPageViewModel
+                            productsPageViewModel = mainScreenViewModel.productsPageViewModel
                         )
                     }
                     BottomNavTab.CONTACTS -> {
                         ContactsPage(
-                            viewModel = viewModel.contactsPageViewModel
+                            contactsPageViewModel = mainScreenViewModel.contactsPageViewModel
                         )
                     }
                 }

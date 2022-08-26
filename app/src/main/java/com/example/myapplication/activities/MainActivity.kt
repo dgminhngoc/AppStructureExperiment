@@ -50,10 +50,10 @@ fun App(appViewModel: AppViewModel) {
                 InitDataScreen()
             }
             AppScreen.LOGIN -> {
-                LoginScreen(viewModel = appViewModel.loginScreenViewModel)
+                LoginScreen(loginScreenViewModel = appViewModel.loginScreenViewModel)
             }
             AppScreen.MAIN -> {
-                MainScreen(viewModel = appViewModel.mainScreenViewModel)
+                MainScreen(mainScreenViewModel = appViewModel.mainScreenViewModel)
             }
         }
     }

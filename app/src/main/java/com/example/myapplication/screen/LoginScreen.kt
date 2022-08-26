@@ -6,34 +6,31 @@ import androidx.compose.runtime.*
 import com.example.myapplication.viewmodel.LoginPage
 import com.example.myapplication.viewmodel.LoginScreenViewModel
 import com.example.myapplication.viewmodel.localAppViewModel
-import com.example.myapplication.viewmodel.localLoginScreenViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginScreenViewModel,
+    loginScreenViewModel: LoginScreenViewModel,
 ) {
-    CompositionLocalProvider(localLoginScreenViewModel provides viewModel) {
-        Box {
-            when(viewModel.selectedPageIndexState.value) {
-                LoginPage.LOGIN -> {
-                    LoginPage(
-                        viewModel = viewModel.loginPageViewModel,
-                        loginScreenViewModel = viewModel,
-                        appViewModel = localAppViewModel.current
-                    )
-                }
-                LoginPage.REGISTER -> {
-                    RegisterPage(
-                        viewModel = viewModel.registrationPageViewModel,
-                        loginScreenViewModel = viewModel
-                    )
-                }
-                LoginPage.RESET_PASSWORD -> {
-                    ResetPasswordPage(
-                        viewModel = viewModel.resetPasswordPageViewModel,
-                        loginScreenViewModel = viewModel
-                    )
-                }
+    Box {
+        when(loginScreenViewModel.selectedPageIndexState.value) {
+            LoginPage.LOGIN -> {
+                LoginPage(
+                    loginPageViewModel = loginScreenViewModel.loginPageViewModel,
+                    loginScreenViewModel = loginScreenViewModel,
+                    appViewModel = localAppViewModel.current
+                )
+            }
+            LoginPage.REGISTER -> {
+                RegisterPage(
+                    registrationPageViewModel = loginScreenViewModel.registrationPageViewModel,
+                    loginScreenViewModel = loginScreenViewModel
+                )
+            }
+            LoginPage.RESET_PASSWORD -> {
+                ResetPasswordPage(
+                    resetPasswordPageViewModel = loginScreenViewModel.resetPasswordPageViewModel,
+                    loginScreenViewModel = loginScreenViewModel
+                )
             }
         }
     }

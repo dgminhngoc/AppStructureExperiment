@@ -6,7 +6,7 @@ import com.example.myapplication.viewmodel.ProductsPageViewModel
 
 @Composable
 fun ProductsPage(
-    viewModel: ProductsPageViewModel = ProductsPageViewModel()
+    productsPageViewModel: ProductsPageViewModel = ProductsPageViewModel()
 ) {
     Text(text = "Product Page")
 }

@@ -13,12 +13,12 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun RegisterPage(
-    viewModel: RegistrationPageViewModel,
+    registrationPageViewModel: RegistrationPageViewModel,
     loginScreenViewModel: LoginScreenViewModel
 ) {
-    if(!viewModel.registrationSubmittedState.value) {
+    if(!registrationPageViewModel.registrationSubmittedState.value) {
         RegisterFormPage(
-            viewModel = viewModel,
+            viewModel = registrationPageViewModel,
             loginScreenViewModel = loginScreenViewModel
         )
     }

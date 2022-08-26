@@ -12,12 +12,12 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun LoginPage(
-    viewModel: LoginPageViewModel,
+    loginPageViewModel: LoginPageViewModel,
     loginScreenViewModel: LoginScreenViewModel,
     appViewModel: AppViewModel,
 ) {
-    if(viewModel.loginFormSubmittedState.value.isSuccessful) {
-        viewModel.loginFormSubmittedState.value.user?.let {
+    if(loginPageViewModel.loginFormSubmittedState.value.isSuccessful) {
+        loginPageViewModel.loginFormSubmittedState.value.user?.let {
             appViewModel.onUIEvent(UIEvent.Login(user = it))
         }
     }
@@ -33,8 +33,8 @@ fun LoginPage(
                 end = 30.dp,
             )
     ) {
-        var email by remember { mutableStateOf(viewModel.loginFormState.value.email) }
-        var password by remember { mutableStateOf(viewModel.loginFormState.value.password) }
+        var email by remember { mutableStateOf(loginPageViewModel.loginFormState.value.email) }
+        var password by remember { mutableStateOf(loginPageViewModel.loginFormState.value.password) }
 
         TextField(
             modifier = Modifier
@@ -42,12 +42,12 @@ fun LoginPage(
             value = email,
             onValueChange = {
                 email = it
-                viewModel.onEvent(LoginFormEvent.LoginFormChanged(
+                loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
                     email = email,
                     password = password,
                 ))
             },
-            isError = viewModel.loginFormState.value.emailError != null,
+            isError = loginPageViewModel.loginFormState.value.emailError != null,
             label = { Text("E-Mail") }
         )
         TextField(
@@ -56,19 +56,19 @@ fun LoginPage(
             value = password,
             onValueChange = {
                 password = it
-                viewModel.onEvent(LoginFormEvent.LoginFormChanged(
+                loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
                     email = email,
                     password = password,
                 ))
             },
-            isError = viewModel.loginFormState.value.passwordError != null,
+            isError = loginPageViewModel.loginFormState.value.passwordError != null,
             label = { Text("Password") }
         )
 
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                viewModel.onEvent(LoginFormEvent.LoginFormSubmit)
+                loginPageViewModel.onEvent(LoginFormEvent.LoginFormSubmit)
             }
         ) {
             Text(text = "Login")

@@ -1,8 +1,6 @@
 package com.example.myapplication.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import com.example.myapplication.domain.IDataRepository
 
@@ -17,8 +15,6 @@ enum class LoginPage {
     REGISTER,
     RESET_PASSWORD,
 }
-
-val localLoginScreenViewModel = compositionLocalOf<LoginScreenViewModel> { error("LoginScreenViewModel not set") }
 
 class LoginScreenViewModel(
     private val dataRepository: IDataRepository
@@ -60,8 +56,6 @@ class LoginScreenViewModel(
         disposePageViewModel(LoginPage.LOGIN)
         disposePageViewModel(LoginPage.REGISTER)
         disposePageViewModel(LoginPage.RESET_PASSWORD)
-
-        Log.d("TEST", "LoginScreenViewModel dispose")
     }
 
     private fun disposePageViewModel(page: LoginPage) {

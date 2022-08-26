@@ -12,12 +12,12 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun ResetPasswordPage(
-    viewModel: ResetPasswordPageViewModel,
+    resetPasswordPageViewModel: ResetPasswordPageViewModel,
     loginScreenViewModel: LoginScreenViewModel
 ) {
-    if(!viewModel.resetPasswordSubmittedState.value) {
+    if(!resetPasswordPageViewModel.resetPasswordSubmittedState.value) {
         ResetPasswordFormPage(
-            viewModel = viewModel,
+            viewModel = resetPasswordPageViewModel,
             loginScreenViewModel = loginScreenViewModel
         )
     }
