@@ -1,5 +1,9 @@
 package com.example.myapplication.viewmodel
 
-class HomePageViewModel: IViewModel() {
+abstract class IHomePageViewModel: IViewModel() {
+
+}
+
+class HomePageViewModel: IHomePageViewModel() {
 
 }

@@ -12,12 +12,12 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun ResetPasswordPage(
-    resetPasswordPageViewModel: ResetPasswordPageViewModel,
-    loginScreenViewModel: LoginScreenViewModel
+    resetPasswordPageViewModel: IResetPasswordPageViewModel = localAppViewModel.current.loginScreenViewModel.resetPasswordPageViewModel,
+    loginScreenViewModel: ILoginScreenViewModel = localAppViewModel.current.loginScreenViewModel
 ) {
     if(!resetPasswordPageViewModel.resetPasswordSubmittedState.value) {
         ResetPasswordFormPage(
-            viewModel = resetPasswordPageViewModel,
+            resetPasswordPageViewModel = resetPasswordPageViewModel,
             loginScreenViewModel = loginScreenViewModel
         )
     }
@@ -30,10 +30,10 @@ fun ResetPasswordPage(
 
 @Composable
 fun ResetPasswordFormPage(
-    viewModel: ResetPasswordPageViewModel,
-    loginScreenViewModel: LoginScreenViewModel
+    resetPasswordPageViewModel: IResetPasswordPageViewModel,
+    loginScreenViewModel: ILoginScreenViewModel
 ) {
-    var email by remember { mutableStateOf(viewModel.resetPasswordFormState.value.email) }
+    var email by remember { mutableStateOf(resetPasswordPageViewModel.resetPasswordFormState.value.email) }
 
     Box {
         Column(
@@ -54,19 +54,19 @@ fun ResetPasswordFormPage(
                 value = email,
                 onValueChange = {
                     email = it
-                    viewModel.onEvent(
+                    resetPasswordPageViewModel.onEvent(
                         ResetPasswordFormEvent.ResetPasswordFormChanged(
                             email = email,
                         ))
                 },
-                isError = viewModel.resetPasswordFormState.value.emailError != null,
+                isError = resetPasswordPageViewModel.resetPasswordFormState.value.emailError != null,
                 label = { Text("E-Mail") }
             )
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    viewModel.onEvent(ResetPasswordFormEvent.ResetPasswordFormSubmit)
+                    resetPasswordPageViewModel.onEvent(ResetPasswordFormEvent.ResetPasswordFormSubmit)
                 }
             ) {
                 Text(text = "Reset Password")
@@ -74,7 +74,7 @@ fun ResetPasswordFormPage(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginPage.LOGIN))
+                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.LOGIN))
                 }
             ) {
                 Text(text = "Cancel")
@@ -85,7 +85,7 @@ fun ResetPasswordFormPage(
 
 @Composable
 fun ResetPasswordSuccessPage(
-    loginScreenViewModel: LoginScreenViewModel
+    loginScreenViewModel: ILoginScreenViewModel
 ) {
     Box {
         Column(
@@ -104,7 +104,7 @@ fun ResetPasswordSuccessPage(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginPage.LOGIN))
+                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.LOGIN))
                 }
             ) {
                 Text(text = "Back to login screen")

@@ -2,35 +2,22 @@ package com.example.myapplication.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-
-import com.example.myapplication.viewmodel.LoginPage
-import com.example.myapplication.viewmodel.LoginScreenViewModel
-import com.example.myapplication.viewmodel.localAppViewModel
+import com.example.myapplication.viewmodel.*
 
 @Composable
 fun LoginScreen(
-    loginScreenViewModel: LoginScreenViewModel,
+    loginScreenViewModel: ILoginScreenViewModel = localAppViewModel.current.loginScreenViewModel,
 ) {
     Box {
-        when(loginScreenViewModel.selectedPageIndexState.value) {
-            LoginPage.LOGIN -> {
-                LoginPage(
-                    loginPageViewModel = loginScreenViewModel.loginPageViewModel,
-                    loginScreenViewModel = loginScreenViewModel,
-                    appViewModel = localAppViewModel.current
-                )
+        when (loginScreenViewModel.selectedPageIndexState.value) {
+            LoginNavigatePage.LOGIN -> {
+                LoginPage()
             }
-            LoginPage.REGISTER -> {
-                RegisterPage(
-                    registrationPageViewModel = loginScreenViewModel.registrationPageViewModel,
-                    loginScreenViewModel = loginScreenViewModel
-                )
+            LoginNavigatePage.REGISTER -> {
+                RegisterPage()
             }
-            LoginPage.RESET_PASSWORD -> {
-                ResetPasswordPage(
-                    resetPasswordPageViewModel = loginScreenViewModel.resetPasswordPageViewModel,
-                    loginScreenViewModel = loginScreenViewModel
-                )
+            LoginNavigatePage.RESET_PASSWORD -> {
+                ResetPasswordPage()
             }
         }
     }

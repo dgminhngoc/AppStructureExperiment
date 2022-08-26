@@ -16,8 +16,13 @@ sealed class MainScreenEvent {
     ): MainScreenEvent()
 }
 
-class MainScreenViewModel: IViewModel() {
-    val selectedTabIndexState: MutableState<BottomNavTab> = mutableStateOf(BottomNavTab.HOME)
+abstract class IMainScreenViewModel: IViewModel() {
+    abstract val selectedTabIndexState: MutableState<BottomNavTab>
+    abstract fun onEvent(event: MainScreenEvent)
+}
+
+class MainScreenViewModel: IMainScreenViewModel() {
+    override val selectedTabIndexState = mutableStateOf(BottomNavTab.HOME)
 
     private var _homePageViewModel: HomePageViewModel? = null
     val homePageViewModel: HomePageViewModel
@@ -47,7 +52,7 @@ class MainScreenViewModel: IViewModel() {
             return _contactsPageViewModel!!
         }
 
-    fun onEvent(event: MainScreenEvent) {
+    override fun onEvent(event: MainScreenEvent) {
         when(event) {
             is MainScreenEvent.MainBottomTabNavigate -> {
                 disposeTabViewModel(selectedTabIndexState.value)

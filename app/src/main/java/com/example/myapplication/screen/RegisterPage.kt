@@ -13,12 +13,12 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun RegisterPage(
-    registrationPageViewModel: RegistrationPageViewModel,
-    loginScreenViewModel: LoginScreenViewModel
+    registrationPageViewModel: IRegistrationPageViewModel = localAppViewModel.current.loginScreenViewModel.registrationPageViewModel,
+    loginScreenViewModel: ILoginScreenViewModel = localAppViewModel.current.loginScreenViewModel
 ) {
     if(!registrationPageViewModel.registrationSubmittedState.value) {
         RegisterFormPage(
-            viewModel = registrationPageViewModel,
+            registrationPageViewModel = registrationPageViewModel,
             loginScreenViewModel = loginScreenViewModel
         )
     }
@@ -31,15 +31,15 @@ fun RegisterPage(
 
 @Composable
 fun RegisterFormPage(
-    viewModel: RegistrationPageViewModel,
-    loginScreenViewModel: LoginScreenViewModel
+    registrationPageViewModel: IRegistrationPageViewModel,
+    loginScreenViewModel: ILoginScreenViewModel
 ) {
-    var email by remember { mutableStateOf(viewModel.registrationFormState.value.email) }
-    var password by remember { mutableStateOf(viewModel.registrationFormState.value.password) }
-    var repeatedPassword by remember { mutableStateOf(viewModel.registrationFormState.value.repeatedPassword) }
-    var firstName by remember { mutableStateOf(viewModel.registrationFormState.value.firstName) }
-    var lastName by remember { mutableStateOf(viewModel.registrationFormState.value.lastname) }
-    var isTermsAccepted by remember { mutableStateOf(viewModel.registrationFormState.value.isTermsAccepted) }
+    var email by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.email) }
+    var password by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.password) }
+    var repeatedPassword by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.repeatedPassword) }
+    var firstName by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.firstName) }
+    var lastName by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.lastname) }
+    var isTermsAccepted by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.isTermsAccepted) }
 
     Box {
         Column(
@@ -60,7 +60,7 @@ fun RegisterFormPage(
                 value = email,
                 onValueChange = {
                     email = it
-                    viewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
+                    registrationPageViewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
                         email = email,
                         password = password,
                         repeatedPassword = repeatedPassword,
@@ -69,7 +69,7 @@ fun RegisterFormPage(
                         isTermsAccepted = isTermsAccepted,
                     ))
                 },
-                isError = viewModel.registrationFormState.value.emailError != null,
+                isError = registrationPageViewModel.registrationFormState.value.emailError != null,
                 label = { Text("E-Mail") }
             )
             TextField(
@@ -78,7 +78,7 @@ fun RegisterFormPage(
                 value = password,
                 onValueChange = {
                     password = it
-                    viewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
+                    registrationPageViewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
                         email = email,
                         password = password,
                         repeatedPassword = repeatedPassword,
@@ -87,7 +87,7 @@ fun RegisterFormPage(
                         isTermsAccepted = isTermsAccepted,
                     ))
                 },
-                isError = viewModel.registrationFormState.value.passwordError != null,
+                isError = registrationPageViewModel.registrationFormState.value.passwordError != null,
                 label = { Text("Password") }
             )
             TextField(
@@ -96,7 +96,7 @@ fun RegisterFormPage(
                 value = repeatedPassword,
                 onValueChange = {
                     repeatedPassword = it
-                    viewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
+                    registrationPageViewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
                         email = email,
                         password = password,
                         repeatedPassword = repeatedPassword,
@@ -105,7 +105,7 @@ fun RegisterFormPage(
                         isTermsAccepted = isTermsAccepted,
                     ))
                 },
-                isError = viewModel.registrationFormState.value.repeatedPasswordError != null,
+                isError = registrationPageViewModel.registrationFormState.value.repeatedPasswordError != null,
                 label = { Text("Repeat password") }
             )
             TextField(
@@ -114,7 +114,7 @@ fun RegisterFormPage(
                 value = firstName,
                 onValueChange = {
                     firstName = it
-                    viewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
+                    registrationPageViewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
                         email = email,
                         password = password,
                         repeatedPassword = repeatedPassword,
@@ -123,7 +123,7 @@ fun RegisterFormPage(
                         isTermsAccepted = isTermsAccepted,
                     ))
                 },
-                isError = viewModel.registrationFormState.value.firstNameError != null,
+                isError = registrationPageViewModel.registrationFormState.value.firstNameError != null,
                 label = { Text("First Name") }
             )
             TextField(
@@ -132,7 +132,7 @@ fun RegisterFormPage(
                 value = lastName,
                 onValueChange = {
                     lastName = it
-                    viewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
+                    registrationPageViewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
                         email = email,
                         password = password,
                         repeatedPassword = repeatedPassword,
@@ -141,7 +141,7 @@ fun RegisterFormPage(
                         isTermsAccepted = isTermsAccepted,
                     ))
                 },
-                isError = viewModel.registrationFormState.value.lastnameError != null,
+                isError = registrationPageViewModel.registrationFormState.value.lastnameError != null,
                 label = { Text("Last Name") }
             )
 
@@ -151,7 +151,7 @@ fun RegisterFormPage(
                     modifier = Modifier.padding(16.dp),
                     onCheckedChange = {
                         isTermsAccepted = it
-                        viewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
+                        registrationPageViewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
                             email = email,
                             password = password,
                             repeatedPassword = repeatedPassword,
@@ -164,14 +164,14 @@ fun RegisterFormPage(
                 Text(text = "Terms Accept", modifier = Modifier.padding(16.dp))
             }
 
-            viewModel.registrationFormState.value.isTermsAcceptedError?.let {
+            registrationPageViewModel.registrationFormState.value.isTermsAcceptedError?.let {
                 Text(text = it)
             }
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    viewModel.onEvent(RegistrationFormEvent.RegistrationFormSubmit)
+                    registrationPageViewModel.onEvent(RegistrationFormEvent.RegistrationFormSubmit)
                 }
             ) {
                 Text(text = "Register")
@@ -179,7 +179,7 @@ fun RegisterFormPage(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginPage.LOGIN))
+                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.LOGIN))
                 }
             ) {
                 Text(text = "Cancel")
@@ -190,7 +190,7 @@ fun RegisterFormPage(
 
 @Composable
 fun RegisterSuccessPage(
-    loginScreenViewModel: LoginScreenViewModel
+    loginScreenViewModel: ILoginScreenViewModel
 ) {
     Box {
         Column(
@@ -209,7 +209,7 @@ fun RegisterSuccessPage(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginPage.LOGIN))
+                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.LOGIN))
                 }
             ) {
                 Text(text = "Back to login screen")

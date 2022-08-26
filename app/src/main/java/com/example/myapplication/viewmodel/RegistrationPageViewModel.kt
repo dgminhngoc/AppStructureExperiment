@@ -1,6 +1,7 @@
 package com.example.myapplication.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.example.myapplication.domain.IDataRepository
 import com.example.myapplication.domain.RequestResult
@@ -35,6 +36,12 @@ data class RegistrationFormState(
     val isTermsAcceptedError: String? = null,
 )
 
+abstract class IRegistrationPageViewModel: IViewModel() {
+    abstract val registrationFormState: MutableState<RegistrationFormState>
+    abstract val registrationSubmittedState: MutableState<Boolean>
+    abstract fun onEvent(event: RegistrationFormEvent)
+}
+
 class RegistrationPageViewModel(
     private val dataRepository: IDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
@@ -42,15 +49,15 @@ class RegistrationPageViewModel(
     private val repeatedPasswordValidator: RepeatedPasswordValidator = RepeatedPasswordValidator(),
     private val nameValidator: NameValidator = NameValidator(),
     private val termsValidator: TermsValidator = TermsValidator(),
-): IViewModel() {
+): IRegistrationPageViewModel() {
 
-    val registrationFormState = mutableStateOf(RegistrationFormState())
-    val registrationSubmittedState = mutableStateOf(false)
+    override val registrationFormState = mutableStateOf(RegistrationFormState())
+    override val registrationSubmittedState = mutableStateOf(false)
 
     private var registrationJob: Job? = null
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
-    fun onEvent(event: RegistrationFormEvent) {
+    override fun onEvent(event: RegistrationFormEvent) {
         when(event) {
             is RegistrationFormEvent.RegistrationFormChanged -> {
                 registrationFormState.value = RegistrationFormState(

@@ -1,6 +1,7 @@
 package com.example.myapplication.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.example.myapplication.domain.IDataRepository
 import com.example.myapplication.domain.RequestResult
@@ -20,17 +21,24 @@ data class ResetPasswordFormState(
     val emailError: String? = null,
 )
 
+abstract class IResetPasswordPageViewModel: IViewModel() {
+    abstract val resetPasswordFormState: MutableState<ResetPasswordFormState>
+    abstract val resetPasswordSubmittedState: MutableState<Boolean>
+    abstract fun onEvent(event: ResetPasswordFormEvent)
+}
+
 class ResetPasswordPageViewModel(
     private val dataRepository: IDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
-): IViewModel() {
-    val resetPasswordFormState = mutableStateOf(ResetPasswordFormState())
-    val resetPasswordSubmittedState = mutableStateOf(false)
+): IResetPasswordPageViewModel() {
+
+    override val resetPasswordFormState = mutableStateOf(ResetPasswordFormState())
+    override val resetPasswordSubmittedState = mutableStateOf(false)
 
     private var resetPasswordJob: Job? = null
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
-    fun onEvent(event: ResetPasswordFormEvent) {
+    override fun onEvent(event: ResetPasswordFormEvent) {
         when(event) {
             is ResetPasswordFormEvent.ResetPasswordFormChanged -> {
                 resetPasswordFormState.value = ResetPasswordFormState(

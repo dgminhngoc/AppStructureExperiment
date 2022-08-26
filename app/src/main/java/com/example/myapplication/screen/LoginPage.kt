@@ -12,9 +12,9 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun LoginPage(
-    loginPageViewModel: LoginPageViewModel,
-    loginScreenViewModel: LoginScreenViewModel,
-    appViewModel: AppViewModel,
+    loginPageViewModel: ILoginPageViewModel = localAppViewModel.current.loginScreenViewModel.loginPageViewModel,
+    loginScreenViewModel: ILoginScreenViewModel = localAppViewModel.current.loginScreenViewModel,
+    appViewModel: IAppViewModel = localAppViewModel.current,
 ) {
     if(loginPageViewModel.loginFormSubmittedState.value.isSuccessful) {
         loginPageViewModel.loginFormSubmittedState.value.user?.let {
@@ -76,7 +76,7 @@ fun LoginPage(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginPage.REGISTER))
+                loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.REGISTER))
             }
         ) {
             Text(text = "Register")
@@ -84,7 +84,7 @@ fun LoginPage(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginPage.RESET_PASSWORD))
+                loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.RESET_PASSWORD))
             }
         ) {
             Text(text = "Forgot Password")

@@ -7,13 +7,11 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.viewmodel.BottomNavTab
-import com.example.myapplication.viewmodel.MainScreenEvent
-import com.example.myapplication.viewmodel.MainScreenViewModel
+import com.example.myapplication.viewmodel.*
 
 @Composable
 fun MainScreen(
-    mainScreenViewModel: MainScreenViewModel
+    mainScreenViewModel: IMainScreenViewModel = localAppViewModel.current.mainScreenViewModel
 ) {
     val items = listOf("News", "Videos", "Products", "Contacts")
     Scaffold(
@@ -41,24 +39,16 @@ fun MainScreen(
             Box(modifier = Modifier.padding(it)) {
                 when(mainScreenViewModel.selectedTabIndexState.value) {
                     BottomNavTab.HOME -> {
-                        HomePage(
-                            homePageViewModel = mainScreenViewModel.homePageViewModel
-                        )
+                        HomePage()
                     }
                     BottomNavTab.VIDEOS -> {
-                        VideosPage(
-                            videosPageViewModel = mainScreenViewModel.videosPageViewModel
-                        )
+                        VideosPage()
                     }
                     BottomNavTab.PRODUCTS -> {
-                        ProductsPage(
-                            productsPageViewModel = mainScreenViewModel.productsPageViewModel
-                        )
+                        ProductsPage()
                     }
                     BottomNavTab.CONTACTS -> {
-                        ContactsPage(
-                            contactsPageViewModel = mainScreenViewModel.contactsPageViewModel
-                        )
+                        ContactsPage()
                     }
                 }
             }

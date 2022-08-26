@@ -26,35 +26,38 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val appViewModel = ViewModelProvider(
+            this,
+            AppViewModelFactory(
+                dataRepository = DataRepository(),
+                prefsRepository = UserPreferencesRepository(dataStore)
+            )
+        )[AppViewModel::class.java]
+
         setContent {
             MyApplicationTheme {
-                App(
-                    appViewModel = ViewModelProvider(
-                        this,
-                        AppViewModelFactory(
-                            dataRepository = DataRepository(),
-                            prefsRepository = UserPreferencesRepository(dataStore)
-                        )
-                    )[AppViewModel::class.java]
-                )
+
+
+                CompositionLocalProvider(localAppViewModel provides appViewModel) {
+                    App(appViewModel = appViewModel)
+                }
+
             }
         }
     }
 }
 
 @Composable
-fun App(appViewModel: AppViewModel) {
-    CompositionLocalProvider(localAppViewModel provides appViewModel) {
-        when(appViewModel.selectedScreenIndexState.value) {
-            AppScreen.INIT_DATA -> {
-                InitDataScreen()
-            }
-            AppScreen.LOGIN -> {
-                LoginScreen(loginScreenViewModel = appViewModel.loginScreenViewModel)
-            }
-            AppScreen.MAIN -> {
-                MainScreen(mainScreenViewModel = appViewModel.mainScreenViewModel)
-            }
+fun App(appViewModel: IAppViewModel) {
+    when(appViewModel.selectedScreenIndexState.value) {
+        AppScreen.INIT_DATA -> {
+            InitDataScreen()
+        }
+        AppScreen.LOGIN -> {
+            LoginScreen()
+        }
+        AppScreen.MAIN -> {
+            MainScreen(mainScreenViewModel = localAppViewModel.current.mainScreenViewModel)
         }
     }
 }

@@ -1,5 +1,9 @@
 package com.example.myapplication.viewmodel
 
-class ProductsPageViewModel: IViewModel() {
+abstract class IProductsPageViewModel: IViewModel() {
+
+}
+
+class ProductsPageViewModel: IProductsPageViewModel() {
 
 }

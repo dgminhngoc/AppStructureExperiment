@@ -6,44 +6,49 @@ import com.example.myapplication.domain.IDataRepository
 
 sealed class LoginScreenEvent {
     data class LoginPageNavigate(
-        val page: LoginPage
+        val page: LoginNavigatePage
     ): LoginScreenEvent()
 }
 
-enum class LoginPage {
+enum class LoginNavigatePage {
     LOGIN,
     REGISTER,
     RESET_PASSWORD,
 }
 
+abstract class ILoginScreenViewModel: IViewModel() {
+    abstract val selectedPageIndexState: MutableState<LoginNavigatePage>
+    abstract fun onEvent(event: LoginScreenEvent)
+}
+
 class LoginScreenViewModel(
     private val dataRepository: IDataRepository
-): IViewModel() {
+): ILoginScreenViewModel() {
 
-    val selectedPageIndexState: MutableState<LoginPage> = mutableStateOf(LoginPage.LOGIN)
+    override val selectedPageIndexState: MutableState<LoginNavigatePage> = mutableStateOf(LoginNavigatePage.LOGIN)
 
-    private var _loginPageViewModel: LoginPageViewModel? = null
-    val loginPageViewModel: LoginPageViewModel
+    private var _loginPageViewModel: ILoginPageViewModel? = null
+    val loginPageViewModel: ILoginPageViewModel
         get() {
             _loginPageViewModel = _loginPageViewModel ?: LoginPageViewModel(dataRepository)
             return _loginPageViewModel!!
         }
 
-    private var _registrationPageViewModel: RegistrationPageViewModel? = null
-    val registrationPageViewModel: RegistrationPageViewModel
+    private var _registrationPageViewModel: IRegistrationPageViewModel? = null
+    val registrationPageViewModel: IRegistrationPageViewModel
         get() {
             _registrationPageViewModel = _registrationPageViewModel ?: RegistrationPageViewModel(dataRepository)
             return _registrationPageViewModel!!
         }
 
-    private var _resetPasswordPageViewModel: ResetPasswordPageViewModel? = null
-    val resetPasswordPageViewModel: ResetPasswordPageViewModel
+    private var _resetPasswordPageViewModel: IResetPasswordPageViewModel? = null
+    val resetPasswordPageViewModel: IResetPasswordPageViewModel
         get() {
             _resetPasswordPageViewModel = _resetPasswordPageViewModel ?: ResetPasswordPageViewModel(dataRepository)
             return _resetPasswordPageViewModel!!
         }
 
-    fun onEvent(event: LoginScreenEvent) {
+    override fun onEvent(event: LoginScreenEvent) {
         when(event) {
             is LoginScreenEvent.LoginPageNavigate -> {
                 selectedPageIndexState.value = event.page
@@ -53,22 +58,22 @@ class LoginScreenViewModel(
     }
 
     override fun dispose() {
-        disposePageViewModel(LoginPage.LOGIN)
-        disposePageViewModel(LoginPage.REGISTER)
-        disposePageViewModel(LoginPage.RESET_PASSWORD)
+        disposePageViewModel(LoginNavigatePage.LOGIN)
+        disposePageViewModel(LoginNavigatePage.REGISTER)
+        disposePageViewModel(LoginNavigatePage.RESET_PASSWORD)
     }
 
-    private fun disposePageViewModel(page: LoginPage) {
+    private fun disposePageViewModel(page: LoginNavigatePage) {
         when(page) {
-            LoginPage.LOGIN -> {
+            LoginNavigatePage.LOGIN -> {
                 _loginPageViewModel?.dispose()
                 _loginPageViewModel = null
             }
-            LoginPage.REGISTER -> {
+            LoginNavigatePage.REGISTER -> {
                 _registrationPageViewModel?.dispose()
                 _registrationPageViewModel = null
             }
-            LoginPage.RESET_PASSWORD -> {
+            LoginNavigatePage.RESET_PASSWORD -> {
                 _resetPasswordPageViewModel?.dispose()
                 _resetPasswordPageViewModel = null
             }

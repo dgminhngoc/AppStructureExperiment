@@ -25,14 +25,19 @@ enum class AppScreen{
     MAIN,
 }
 
+interface IAppViewModel{
+    val selectedScreenIndexState: MutableState<AppScreen>
+    fun onUIEvent(event: UIEvent)
+}
+
 val localAppViewModel = compositionLocalOf<AppViewModel> { error("AppViewModel not set") }
 
 class AppViewModel(
     private val dataRepository: IDataRepository,
     private val prefsRepository: IUserPreferencesRepository,
-): ViewModel() {
+): IAppViewModel, ViewModel() {
 
-    val selectedScreenIndexState: MutableState<AppScreen> = mutableStateOf(AppScreen.INIT_DATA)
+    override val selectedScreenIndexState = mutableStateOf(AppScreen.INIT_DATA)
 
     ///AppViewModel has instance of sub-viewmodels to store current states of app
     ///Storing current states is quite importance for responsive design, that view re-composed very
@@ -64,7 +69,7 @@ class AppViewModel(
         }
     }
 
-    fun onUIEvent(event: UIEvent) {
+    override fun onUIEvent(event: UIEvent) {
         when(event) {
             is UIEvent.Login -> {
                 login(event.user)

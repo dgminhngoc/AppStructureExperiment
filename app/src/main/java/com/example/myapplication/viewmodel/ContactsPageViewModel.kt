@@ -1,5 +1,9 @@
 package com.example.myapplication.viewmodel
 
-class ContactsPageViewModel: IViewModel() {
+abstract class IContactsPageViewModel: IViewModel() {
+
+}
+
+class ContactsPageViewModel: IContactsPageViewModel() {
 
 }

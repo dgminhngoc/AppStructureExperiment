@@ -1,5 +1,6 @@
 package com.example.myapplication.viewmodel
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.example.myapplication.domain.IDataRepository
 import com.example.myapplication.domain.RequestResult
@@ -29,19 +30,25 @@ data class LoginFormSubmittedState(
     val user: User? = null,
 )
 
+abstract class ILoginPageViewModel: IViewModel() {
+    abstract val loginFormState: MutableState<LoginFormState>
+    abstract val loginFormSubmittedState: MutableState<LoginFormSubmittedState>
+    abstract fun onEvent(event: LoginFormEvent)
+}
+
 class LoginPageViewModel(
     private val dataRepository: IDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
     private val passwordValidator: PasswordValidator = PasswordValidator(),
-): IViewModel() {
+): ILoginPageViewModel() {
 
-    val loginFormState = mutableStateOf(LoginFormState())
-    val loginFormSubmittedState = mutableStateOf(LoginFormSubmittedState())
+    override val loginFormState = mutableStateOf(LoginFormState())
+    override val loginFormSubmittedState = mutableStateOf(LoginFormSubmittedState())
 
     private var loginJob: Job? = null
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
-    fun onEvent(event: LoginFormEvent) {
+    override fun onEvent(event: LoginFormEvent) {
         when(event) {
             is LoginFormEvent.LoginFormChanged -> {
                 loginFormState.value = LoginFormState(
