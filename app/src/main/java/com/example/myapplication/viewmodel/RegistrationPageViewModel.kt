@@ -2,10 +2,12 @@ package com.example.myapplication.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import com.example.myapplication.domain.IDataRepository
+import com.example.myapplication.domain.RequestResult
 import com.example.myapplication.validators.*
 import kotlinx.coroutines.*
 
-sealed class  RegistrationFormEvent {
+sealed class RegistrationFormEvent {
     data class RegistrationFormChanged(
         val email: String,
         val password: String,
@@ -33,7 +35,8 @@ data class RegistrationFormState(
     val isTermsAcceptedError: String? = null,
 )
 
-class RegisterPageViewModel(
+class RegistrationPageViewModel(
+    private val dataRepository: IDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
     private val passwordValidator: PasswordValidator = PasswordValidator(),
     private val repeatedPasswordValidator: RepeatedPasswordValidator = RepeatedPasswordValidator(),
@@ -101,7 +104,23 @@ class RegisterPageViewModel(
         }
 
         registrationJob = CoroutineScope(defaultDispatcher).launch {
-            registrationSubmittedState.value = true
+            when(val result = dataRepository.register(
+                email = registrationFormState.value.email,
+                password = registrationFormState.value.password,
+                firstName = registrationFormState.value.firstName,
+                lastName = registrationFormState.value.lastname,
+                authority = "ROLE_GUEST"
+            )){
+                is RequestResult.OnSuccess -> {
+                    result.data?.let {
+                        registrationSubmittedState.value = true
+                    }
+
+                }
+                is RequestResult.OnError -> {
+                    registrationSubmittedState.value = false
+                }
+            }
         }
     }
 

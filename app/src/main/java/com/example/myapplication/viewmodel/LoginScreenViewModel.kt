@@ -29,21 +29,21 @@ class LoginScreenViewModel(
     private var _loginPageViewModel: LoginPageViewModel? = null
     val loginPageViewModel: LoginPageViewModel
         get() {
-            _loginPageViewModel = _loginPageViewModel ?: LoginPageViewModel()
+            _loginPageViewModel = _loginPageViewModel ?: LoginPageViewModel(dataRepository)
             return _loginPageViewModel!!
         }
 
-    private var _registerPageViewModel: RegisterPageViewModel? = null
-    val registerPageViewModel: RegisterPageViewModel
+    private var _registrationPageViewModel: RegistrationPageViewModel? = null
+    val registrationPageViewModel: RegistrationPageViewModel
         get() {
-            _registerPageViewModel = _registerPageViewModel ?: RegisterPageViewModel()
-            return _registerPageViewModel!!
+            _registrationPageViewModel = _registrationPageViewModel ?: RegistrationPageViewModel(dataRepository)
+            return _registrationPageViewModel!!
         }
 
     private var _resetPasswordPageViewModel: ResetPasswordPageViewModel? = null
     val resetPasswordPageViewModel: ResetPasswordPageViewModel
         get() {
-            _resetPasswordPageViewModel = _resetPasswordPageViewModel ?: ResetPasswordPageViewModel()
+            _resetPasswordPageViewModel = _resetPasswordPageViewModel ?: ResetPasswordPageViewModel(dataRepository)
             return _resetPasswordPageViewModel!!
         }
 
@@ -71,8 +71,8 @@ class LoginScreenViewModel(
                 _loginPageViewModel = null
             }
             LoginPage.REGISTER -> {
-                _registerPageViewModel?.dispose()
-                _registerPageViewModel = null
+                _registrationPageViewModel?.dispose()
+                _registrationPageViewModel = null
             }
             LoginPage.RESET_PASSWORD -> {
                 _resetPasswordPageViewModel?.dispose()

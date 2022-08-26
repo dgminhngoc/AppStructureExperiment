@@ -13,7 +13,7 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun RegisterPage(
-    viewModel: RegisterPageViewModel,
+    viewModel: RegistrationPageViewModel,
     loginScreenViewModel: LoginScreenViewModel
 ) {
     if(!viewModel.registrationSubmittedState.value) {
@@ -31,7 +31,7 @@ fun RegisterPage(
 
 @Composable
 fun RegisterFormPage(
-    viewModel: RegisterPageViewModel,
+    viewModel: RegistrationPageViewModel,
     loginScreenViewModel: LoginScreenViewModel
 ) {
     var email by remember { mutableStateOf(viewModel.registrationFormState.value.email) }
@@ -70,7 +70,7 @@ fun RegisterFormPage(
                     ))
                 },
                 isError = viewModel.registrationFormState.value.emailError != null,
-                label = { Text("Username") }
+                label = { Text("E-Mail") }
             )
             TextField(
                 modifier = Modifier

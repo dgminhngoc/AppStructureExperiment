@@ -1,22 +1,13 @@
 package com.example.myapplication.domain
 
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.myapplication.models.User
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import java.io.IOException
 
-sealed class UserPreferences {
-    data class PrefsUser(val user: User?) : UserPreferences()
-    object PrefsEmpty: UserPreferences()
-}
-
-interface  IUserPreferencesRepository {
+interface IUserPreferencesRepository {
+    suspend fun getUser(): User
+    suspend fun saveUser(user: User)
 }
 
 private object PreferencesKeys {
@@ -27,7 +18,19 @@ class UserPreferencesRepository(
     private val dataStore: DataStore<Preferences>,
 ): IUserPreferencesRepository{
 
-    fun initUserData() {
+    override suspend fun getUser(): User {
+        return User(
+            id = 0,
+            email = "tim.nguyen@solunar.de",
+            firstName = "Tim",
+            lastName = "Nguyen",
+            accessToken = "access_token",
+            refreshToken = "refresh_token",
+            userRole = "user"
+        )
+    }
+
+    override suspend fun saveUser(user: User) {
 
     }
 

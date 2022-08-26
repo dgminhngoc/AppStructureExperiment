@@ -3,11 +3,17 @@ package com.example.myapplication.viewmodel
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 
-enum class BottomNavTab(val rank: Int) {
+enum class BottomNavTab(val index: Int) {
     HOME(0),
     VIDEOS(1),
     PRODUCTS(2),
     CONTACTS(3),
+}
+
+sealed class MainScreenEvent {
+    data class MainBottomTabNavigate(
+        val tab: BottomNavTab
+    ): MainScreenEvent()
 }
 
 class MainScreenViewModel: IViewModel() {
@@ -41,10 +47,13 @@ class MainScreenViewModel: IViewModel() {
             return _contactsPageViewModel!!
         }
 
-    fun selectTab(bottomNavTab: BottomNavTab) {
-        disposeTabViewModel(selectedTabIndexState.value)
-
-        selectedTabIndexState.value = bottomNavTab
+    fun onEvent(event: MainScreenEvent) {
+        when(event) {
+            is MainScreenEvent.MainBottomTabNavigate -> {
+                disposeTabViewModel(selectedTabIndexState.value)
+                selectedTabIndexState.value = event.tab
+            }
+        }
     }
 
     override fun dispose() {

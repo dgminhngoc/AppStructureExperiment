@@ -12,11 +12,14 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun LoginPage(
-    loginScreenViewModel: LoginScreenViewModel,
     viewModel: LoginPageViewModel,
+    loginScreenViewModel: LoginScreenViewModel,
+    appViewModel: AppViewModel,
 ) {
-    if(viewModel.loginFormSubmittedState.value) {
-        localAppViewModel.current.onUIEvent(UIEvent.Login)
+    if(viewModel.loginFormSubmittedState.value.isSuccessful) {
+        viewModel.loginFormSubmittedState.value.user?.let {
+            appViewModel.onUIEvent(UIEvent.Login(user = it))
+        }
     }
 
     Column(
@@ -45,7 +48,7 @@ fun LoginPage(
                 ))
             },
             isError = viewModel.loginFormState.value.emailError != null,
-            label = { Text("Username") }
+            label = { Text("E-Mail") }
         )
         TextField(
             modifier = Modifier

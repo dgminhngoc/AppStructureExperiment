@@ -5,6 +5,7 @@ import androidx.compose.runtime.*
 
 import com.example.myapplication.viewmodel.LoginPage
 import com.example.myapplication.viewmodel.LoginScreenViewModel
+import com.example.myapplication.viewmodel.localAppViewModel
 import com.example.myapplication.viewmodel.localLoginScreenViewModel
 
 @Composable
@@ -17,18 +18,20 @@ fun LoginScreen(
                 LoginPage.LOGIN -> {
                     LoginPage(
                         viewModel = viewModel.loginPageViewModel,
-                        loginScreenViewModel = viewModel
+                        loginScreenViewModel = viewModel,
+                        appViewModel = localAppViewModel.current
                     )
                 }
                 LoginPage.REGISTER -> {
                     RegisterPage(
-                        viewModel = viewModel.registerPageViewModel,
+                        viewModel = viewModel.registrationPageViewModel,
                         loginScreenViewModel = viewModel
                     )
                 }
                 LoginPage.RESET_PASSWORD -> {
                     ResetPasswordPage(
-                        viewModel = viewModel.resetPasswordPageViewModel
+                        viewModel = viewModel.resetPasswordPageViewModel,
+                        loginScreenViewModel = viewModel
                     )
                 }
             }

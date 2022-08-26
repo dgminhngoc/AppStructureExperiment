@@ -2,6 +2,9 @@ package com.example.myapplication.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import com.example.myapplication.domain.IDataRepository
+import com.example.myapplication.domain.RequestResult
+import com.example.myapplication.models.User
 import com.example.myapplication.validators.EmailValidator
 import com.example.myapplication.validators.PasswordValidator
 import kotlinx.coroutines.*
@@ -22,13 +25,19 @@ data class LoginFormState(
     val passwordError: String? = null,
 )
 
+data class LoginFormSubmittedState(
+    val isSuccessful: Boolean = false,
+    val user: User? = null,
+)
+
 class LoginPageViewModel(
+    private val dataRepository: IDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
     private val passwordValidator: PasswordValidator = PasswordValidator(),
 ): IViewModel() {
 
     val loginFormState = mutableStateOf(LoginFormState())
-    val loginFormSubmittedState = mutableStateOf(false)
+    val loginFormSubmittedState = mutableStateOf(LoginFormSubmittedState())
 
     private var loginJob: Job? = null
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
@@ -68,7 +77,25 @@ class LoginPageViewModel(
         }
 
         loginJob = CoroutineScope(defaultDispatcher).launch {
-            loginFormSubmittedState.value = true
+            when(val result = dataRepository.authenticate(
+                email = loginFormState.value.email,
+                password = loginFormState.value.password
+            )){
+                is RequestResult.OnSuccess -> {
+                    result.data?.let {
+                        loginFormSubmittedState.value = LoginFormSubmittedState(
+                            isSuccessful = true,
+                            user = it
+                        )
+                    }
+
+                }
+                is RequestResult.OnError -> {
+                    loginFormSubmittedState.value = LoginFormSubmittedState(
+                        isSuccessful = false,
+                    )
+                }
+            }
         }
     }
 

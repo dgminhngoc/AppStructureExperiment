@@ -6,10 +6,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.domain.IDataRepository
+import com.example.myapplication.domain.IUserPreferencesRepository
 import com.example.myapplication.domain.UserPreferencesRepository
+import com.example.myapplication.models.User
+import kotlinx.coroutines.*
 
 sealed class UIEvent {
-    object Login: UIEvent()
+    data class Login(
+        val user: User
+    ): UIEvent()
+
     object Logout: UIEvent()
 }
 
@@ -23,11 +29,8 @@ val localAppViewModel = compositionLocalOf<AppViewModel> { error("AppViewModel n
 
 class AppViewModel(
     private val dataRepository: IDataRepository,
-    private val prefsRepository: UserPreferencesRepository,
+    private val prefsRepository: IUserPreferencesRepository,
 ): ViewModel() {
-
-    // Keep the user preferences as a stream of changes
-//    private val userPreferencesFlow = prefsRepository.userPreferencesFlow
 
     val selectedScreenIndexState: MutableState<AppScreen> = mutableStateOf(AppScreen.INIT_DATA)
 
@@ -52,18 +55,26 @@ class AppViewModel(
             return _mainScreenViewModel!!
         }
 
+    lateinit var userDataState: MutableState<User>
+        private set
+
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
+
     init {
-        prefsRepository.initUserData()
-        selectedScreenIndexState.value = AppScreen.LOGIN
-    }
+         CoroutineScope(defaultDispatcher).launch {
+             val user = withContext(defaultDispatcher){
+                prefsRepository.getUser()
+             }
 
-    private fun initRepositories() {
-
+             userDataState = mutableStateOf(user)
+             selectedScreenIndexState.value = AppScreen.LOGIN
+        }
     }
 
     fun onUIEvent(event: UIEvent) {
         when(event) {
             is UIEvent.Login -> {
+                userDataState.value = event.user
                 login()
             }
             is UIEvent.Logout -> {

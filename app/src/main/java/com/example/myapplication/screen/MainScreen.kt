@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.viewmodel.BottomNavTab
+import com.example.myapplication.viewmodel.MainScreenEvent
 import com.example.myapplication.viewmodel.MainScreenViewModel
 
 @Preview
@@ -26,13 +27,13 @@ fun MainScreen(
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
                         label = { Text(item) },
-                        selected = viewModel.selectedTabIndexState.value.rank == index,
-                        onClick = { viewModel.selectTab(when(index) {
-                            0 -> BottomNavTab.HOME
-                            1 -> BottomNavTab.VIDEOS
-                            2 -> BottomNavTab.PRODUCTS
-                            3 -> BottomNavTab.CONTACTS
-                            else -> BottomNavTab.HOME
+                        selected = viewModel.selectedTabIndexState.value.index == index,
+                        onClick = { viewModel.onEvent(when(index) {
+                            0 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.HOME)
+                            1 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.VIDEOS)
+                            2 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.PRODUCTS)
+                            3 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.CONTACTS)
+                            else -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.HOME)
                         }) }
                     )
                 }
