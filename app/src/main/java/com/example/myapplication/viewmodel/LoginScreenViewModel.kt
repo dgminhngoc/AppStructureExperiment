@@ -6,10 +6,16 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateOf
 import com.example.myapplication.domain.IDataRepository
 
-enum class LoginPage(val rank: Int) {
-    LOGIN(0),
-    REGISTER(1),
-    RESET_PASSWORD(2),
+sealed class LoginScreenEvent {
+    data class LoginPageNavigate(
+        val page: LoginPage
+    ): LoginScreenEvent()
+}
+
+enum class LoginPage {
+    LOGIN,
+    REGISTER,
+    RESET_PASSWORD,
 }
 
 val localLoginScreenViewModel = compositionLocalOf<LoginScreenViewModel> { error("LoginScreenViewModel not set") }
@@ -41,10 +47,13 @@ class LoginScreenViewModel(
             return _resetPasswordPageViewModel!!
         }
 
-    fun selectPage(page: LoginPage) {
-        disposePageViewModel(selectedPageIndexState.value)
-
-        selectedPageIndexState.value = page
+    fun onEvent(event: LoginScreenEvent) {
+        when(event) {
+            is LoginScreenEvent.LoginPageNavigate -> {
+                selectedPageIndexState.value = event.page
+                disposePageViewModel(selectedPageIndexState.value)
+            }
+        }
     }
 
     override fun dispose() {

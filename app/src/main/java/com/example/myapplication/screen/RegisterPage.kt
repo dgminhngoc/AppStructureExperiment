@@ -8,34 +8,31 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.viewmodel.RegisterPageViewModel
-import com.example.myapplication.viewmodel.RegistrationFormEvent
-import com.example.myapplication.viewmodel.localLoginScreenViewModel
-import com.example.myapplication.viewmodel.LoginPage
-
-@Preview
-@Composable
-fun RegisterPageTest() {
-    RegisterPage()
-}
+import com.example.myapplication.viewmodel.*
 
 @Composable
 fun RegisterPage(
-    viewModel: RegisterPageViewModel = RegisterPageViewModel()
+    viewModel: RegisterPageViewModel,
+    loginScreenViewModel: LoginScreenViewModel
 ) {
     if(!viewModel.registrationSubmittedState.value) {
-        RegisterFormPage(viewModel = viewModel)
+        RegisterFormPage(
+            viewModel = viewModel,
+            loginScreenViewModel = loginScreenViewModel
+        )
     }
     else{
-        RegisterSuccessPage()
+        RegisterSuccessPage(
+            loginScreenViewModel = loginScreenViewModel
+        )
     }
 }
 
 @Composable
 fun RegisterFormPage(
-    viewModel: RegisterPageViewModel = RegisterPageViewModel()
+    viewModel: RegisterPageViewModel,
+    loginScreenViewModel: LoginScreenViewModel
 ) {
     var email by remember { mutableStateOf(viewModel.registrationFormState.value.email) }
     var password by remember { mutableStateOf(viewModel.registrationFormState.value.password) }
@@ -43,8 +40,6 @@ fun RegisterFormPage(
     var firstName by remember { mutableStateOf(viewModel.registrationFormState.value.firstName) }
     var lastName by remember { mutableStateOf(viewModel.registrationFormState.value.lastname) }
     var isTermsAccepted by remember { mutableStateOf(viewModel.registrationFormState.value.isTermsAccepted) }
-
-    val loginScreenViewModel = localLoginScreenViewModel.current
 
     Box {
         Column(
@@ -184,7 +179,7 @@ fun RegisterFormPage(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    loginScreenViewModel.selectPage(LoginPage.LOGIN)
+                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginPage.LOGIN))
                 }
             ) {
                 Text(text = "Cancel")
@@ -194,7 +189,9 @@ fun RegisterFormPage(
 }
 
 @Composable
-fun RegisterSuccessPage() {
+fun RegisterSuccessPage(
+    loginScreenViewModel: LoginScreenViewModel
+) {
     Box {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -207,14 +204,12 @@ fun RegisterSuccessPage() {
                     end = 30.dp,
                 )
         ) {
-            val loginScreenViewModel = localLoginScreenViewModel.current
-
             Text(text = "Registration is successful")
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    loginScreenViewModel.selectPage(LoginPage.LOGIN)
+                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginPage.LOGIN))
                 }
             ) {
                 Text(text = "Back to login screen")

@@ -12,9 +12,9 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun LoginPage(
+    loginScreenViewModel: LoginScreenViewModel,
     viewModel: LoginPageViewModel,
 ) {
-    val loginScreenViewModel = localLoginScreenViewModel.current
     if(viewModel.loginFormSubmittedState.value) {
         localAppViewModel.current.onUIEvent(UIEvent.Login)
     }
@@ -73,7 +73,7 @@ fun LoginPage(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                loginScreenViewModel.selectPage(LoginPage.REGISTER)
+                loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginPage.REGISTER))
             }
         ) {
             Text(text = "Register")
@@ -81,7 +81,7 @@ fun LoginPage(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                loginScreenViewModel.selectPage(LoginPage.RESET_PASSWORD)
+                loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginPage.RESET_PASSWORD))
             }
         ) {
             Text(text = "Forgot Password")

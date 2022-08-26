@@ -16,12 +16,14 @@ fun LoginScreen(
             when(viewModel.selectedPageIndexState.value) {
                 LoginPage.LOGIN -> {
                     LoginPage(
-                        viewModel = viewModel.loginPageViewModel
+                        viewModel = viewModel.loginPageViewModel,
+                        loginScreenViewModel = viewModel
                     )
                 }
                 LoginPage.REGISTER -> {
                     RegisterPage(
-                        viewModel = viewModel.registerPageViewModel
+                        viewModel = viewModel.registerPageViewModel,
+                        loginScreenViewModel = viewModel
                     )
                 }
                 LoginPage.RESET_PASSWORD -> {
