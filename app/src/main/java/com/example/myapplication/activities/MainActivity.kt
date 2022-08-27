@@ -2,18 +2,24 @@ package com.example.myapplication.activities
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.domain.DataRepository
 import com.example.myapplication.domain.UserPreferencesRepository
 import com.example.myapplication.screen.InitDataScreen
-import com.example.myapplication.screen.MainScreen
 import com.example.myapplication.screen.LoginScreen
+import com.example.myapplication.screen.MainScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import com.example.myapplication.viewmodel.*
+import com.example.myapplication.viewmodel.AppScreen
+import com.example.myapplication.viewmodel.AppViewModel
+import com.example.myapplication.viewmodel.AppViewModelFactory
+import com.example.myapplication.viewmodel.localAppViewModel
 
 private const val USER_PREFERENCES_NAME = "user_preferences"
 
@@ -25,7 +31,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.d("MainActivity", "MainActivity:onCreate")
         val appViewModel = ViewModelProvider(
             this,
             AppViewModelFactory(
@@ -33,13 +39,10 @@ class MainActivity : ComponentActivity() {
                 prefsRepository = UserPreferencesRepository(dataStore)
             )
         )[AppViewModel::class.java]
-
         setContent {
             MyApplicationTheme {
-
-
                 CompositionLocalProvider(localAppViewModel provides appViewModel) {
-                    App(appViewModel = appViewModel)
+                    App()
                 }
 
             }
@@ -48,8 +51,8 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun App(appViewModel: IAppViewModel) {
-    when(appViewModel.selectedScreenIndexState.value) {
+fun App(appViewModel: AppViewModel = viewModel()) {
+    when (appViewModel.selectedScreenIndexState.value) {
         AppScreen.INIT_DATA -> {
             InitDataScreen()
         }
@@ -57,7 +60,7 @@ fun App(appViewModel: IAppViewModel) {
             LoginScreen()
         }
         AppScreen.MAIN -> {
-            MainScreen(mainScreenViewModel = localAppViewModel.current.mainScreenViewModel)
+            MainScreen(mainScreenViewModel = appViewModel.mainScreenViewModel)
         }
     }
 }

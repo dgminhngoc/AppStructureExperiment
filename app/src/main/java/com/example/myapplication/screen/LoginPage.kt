@@ -16,9 +16,19 @@ fun LoginPage(
     loginScreenViewModel: ILoginScreenViewModel = localAppViewModel.current.loginScreenViewModel,
     appViewModel: IAppViewModel = localAppViewModel.current,
 ) {
-    if(loginPageViewModel.loginFormSubmittedState.value.isSuccessful) {
-        loginPageViewModel.loginFormSubmittedState.value.user?.let {
-            appViewModel.onUIEvent(UIEvent.Login(user = it))
+//    if(loginPageViewModel.loginFormSubmittedState.value.isSuccessful) {
+//        loginPageViewModel.loginFormSubmittedState.value.user?.let {
+//            appViewModel.onUIEvent(UIEvent.Login(user = it))
+//        }
+//    }
+
+    val uiState by loginPageViewModel.loginFormSubmittedUIState.collectAsState()
+
+    LaunchedEffect(uiState.isSuccessful) {
+        snapshotFlow { uiState.user }.collect {
+            it?.let {
+                appViewModel.onUIEvent(UIEvent.Login(user = it))
+            }
         }
     }
 
@@ -42,10 +52,12 @@ fun LoginPage(
             value = email,
             onValueChange = {
                 email = it
-                loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
-                    email = email,
-                    password = password,
-                ))
+                loginPageViewModel.onEvent(
+                    LoginFormEvent.LoginFormChanged(
+                        email = email,
+                        password = password,
+                    )
+                )
             },
             isError = loginPageViewModel.loginFormState.value.emailError != null,
             label = { Text("E-Mail") }
@@ -56,10 +68,12 @@ fun LoginPage(
             value = password,
             onValueChange = {
                 password = it
-                loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
-                    email = email,
-                    password = password,
-                ))
+                loginPageViewModel.onEvent(
+                    LoginFormEvent.LoginFormChanged(
+                        email = email,
+                        password = password,
+                    )
+                )
             },
             isError = loginPageViewModel.loginFormState.value.passwordError != null,
             label = { Text("Password") }

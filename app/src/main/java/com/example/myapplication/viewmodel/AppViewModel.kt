@@ -87,7 +87,7 @@ class AppViewModel(
 
         selectedScreenIndexState.value = AppScreen.MAIN
 
-        _loginScreenViewModel?.dispose()
+//        _loginScreenViewModel?.dispose()
         _loginScreenViewModel = null
     }
 

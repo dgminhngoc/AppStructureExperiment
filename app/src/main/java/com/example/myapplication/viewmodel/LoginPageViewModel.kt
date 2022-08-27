@@ -2,20 +2,23 @@ package com.example.myapplication.viewmodel
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.domain.IDataRepository
 import com.example.myapplication.domain.RequestResult
 import com.example.myapplication.models.User
 import com.example.myapplication.validators.EmailValidator
 import com.example.myapplication.validators.PasswordValidator
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
 sealed class LoginFormEvent {
     data class LoginFormChanged(
         val email: String,
         val password: String,
-    ): LoginFormEvent()
+    ) : LoginFormEvent()
 
-    object LoginFormSubmit: LoginFormEvent()
+    object LoginFormSubmit : LoginFormEvent()
 }
 
 data class LoginFormState(
@@ -30,9 +33,11 @@ data class LoginFormSubmittedState(
     val user: User? = null,
 )
 
-abstract class ILoginPageViewModel: IViewModel() {
+abstract class ILoginPageViewModel : ViewModel() {
     abstract val loginFormState: MutableState<LoginFormState>
-    abstract val loginFormSubmittedState: MutableState<LoginFormSubmittedState>
+
+    //    abstract val loginFormSubmittedState: MutableState<LoginFormSubmittedState>
+    abstract val loginFormSubmittedUIState: StateFlow<LoginFormSubmittedState>
     abstract fun onEvent(event: LoginFormEvent)
 }
 
@@ -40,16 +45,23 @@ class LoginPageViewModel(
     private val dataRepository: IDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
     private val passwordValidator: PasswordValidator = PasswordValidator(),
-): ILoginPageViewModel() {
+) : ILoginPageViewModel() {
 
     override val loginFormState = mutableStateOf(LoginFormState())
-    override val loginFormSubmittedState = mutableStateOf(LoginFormSubmittedState())
+    private val loginFormSubmittedState = MutableStateFlow(LoginFormSubmittedState())
+
+    override val loginFormSubmittedUIState: StateFlow<LoginFormSubmittedState> =
+        loginFormSubmittedState.map { it }.stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            loginFormSubmittedState.value
+        )
 
     private var loginJob: Job? = null
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
     override fun onEvent(event: LoginFormEvent) {
-        when(event) {
+        when (event) {
             is LoginFormEvent.LoginFormChanged -> {
                 loginFormState.value = LoginFormState(
                     email = event.email,
@@ -69,11 +81,11 @@ class LoginPageViewModel(
         val hasError = listOf(
             emailValidationResult,
             passwordValidationResult,
-        ).any {validationResult->
+        ).any { validationResult ->
             validationResult.errorMessage != null
         }
 
-        if(hasError) {
+        if (hasError) {
             loginFormState.value = loginFormState.value.copy(
                 emailError = emailValidationResult.errorMessage,
                 passwordError = passwordValidationResult.errorMessage,
@@ -83,10 +95,10 @@ class LoginPageViewModel(
         }
 
         loginJob = CoroutineScope(defaultDispatcher).launch {
-            when(val result = dataRepository.authenticate(
+            when (val result = dataRepository.authenticate(
                 email = loginFormState.value.email,
                 password = loginFormState.value.password
-            )){
+            )) {
                 is RequestResult.OnSuccess -> {
                     result.data?.let {
                         loginFormSubmittedState.value = LoginFormSubmittedState(
@@ -105,10 +117,16 @@ class LoginPageViewModel(
         }
     }
 
-    override fun dispose() {
-        super.dispose()
-
+    override fun onCleared() {
+        super.onCleared()
         loginJob?.cancel()
         loginJob = null
     }
+
+//    override fun dispose() {
+//        super.dispose()
+//
+//        loginJob?.cancel()
+//        loginJob = null
+//    }
 }

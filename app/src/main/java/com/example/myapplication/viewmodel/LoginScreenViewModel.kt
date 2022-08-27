@@ -2,6 +2,7 @@ package com.example.myapplication.viewmodel
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
 import com.example.myapplication.domain.IDataRepository
 
 sealed class LoginScreenEvent {
@@ -16,7 +17,7 @@ enum class LoginNavigatePage {
     RESET_PASSWORD,
 }
 
-abstract class ILoginScreenViewModel: IViewModel() {
+abstract class ILoginScreenViewModel: ViewModel() {
     abstract val selectedPageIndexState: MutableState<LoginNavigatePage>
     abstract fun onEvent(event: LoginScreenEvent)
 }
@@ -57,16 +58,20 @@ class LoginScreenViewModel(
         }
     }
 
-    override fun dispose() {
-        disposePageViewModel(LoginNavigatePage.LOGIN)
-        disposePageViewModel(LoginNavigatePage.REGISTER)
-        disposePageViewModel(LoginNavigatePage.RESET_PASSWORD)
+//    override fun dispose() {
+//        disposePageViewModel(LoginNavigatePage.LOGIN)
+//        disposePageViewModel(LoginNavigatePage.REGISTER)
+//        disposePageViewModel(LoginNavigatePage.RESET_PASSWORD)
+//    }
+
+    override fun onCleared() {
+        super.onCleared()
     }
 
     private fun disposePageViewModel(page: LoginNavigatePage) {
         when(page) {
             LoginNavigatePage.LOGIN -> {
-                _loginPageViewModel?.dispose()
+//                _loginPageViewModel?.dispose()
                 _loginPageViewModel = null
             }
             LoginNavigatePage.REGISTER -> {
