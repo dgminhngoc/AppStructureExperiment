@@ -7,7 +7,10 @@ import com.example.myapplication.viewmodel.IAppViewModel
 import localProvider
 
 @Composable
-fun App(appViewModel: IAppViewModel = localProvider.current.getViewModel(IAppViewModel::class.java)) {
+fun App(
+    appViewModel: IAppViewModel =
+        localProvider.current.getViewModel(IAppViewModel::class.java)
+) {
     when(appViewModel.selectedScreenIndexState.collectAsState().value) {
         AppScreen.INIT_DATA -> {
             InitDataScreen()
