@@ -13,7 +13,17 @@ import localProvider
 @Composable
 fun MainScreen(
     mainScreenViewModel: IMainScreenViewModel = localProvider.current.getViewModel(IMainScreenViewModel::class.java),
+    appViewModel: IAppViewModel = localProvider.current.getViewModel(IAppViewModel::class.java),
 ) {
+
+    val appSelectedScreenIndexState by appViewModel.selectedScreenIndexState.collectAsState()
+    DisposableEffect(appSelectedScreenIndexState) {
+        onDispose {
+            if(appSelectedScreenIndexState != AppScreen.MAIN) {
+                mainScreenViewModel.onCleared()
+            }
+        }
+    }
 
     val items = listOf("News", "Videos", "Products", "Contacts")
     Scaffold(

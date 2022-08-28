@@ -10,9 +10,10 @@ fun LoginScreen(
     loginScreenViewModel: ILoginScreenViewModel = localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
     appViewModel: IAppViewModel = localProvider.current.getViewModel(IAppViewModel::class.java),
 ) {
-    DisposableEffect(appViewModel.selectedScreenIndexState.value) {
+    val appSelectedScreenIndexState by appViewModel.selectedScreenIndexState.collectAsState()
+    DisposableEffect(appSelectedScreenIndexState) {
         onDispose {
-            if(appViewModel.selectedScreenIndexState.value != AppScreen.LOGIN) {
+            if(appSelectedScreenIndexState != AppScreen.LOGIN) {
                 loginScreenViewModel.onCleared()
             }
         }

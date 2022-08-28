@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import com.example.myapplication.domain.IUserPreferencesRepository
 import com.example.myapplication.models.User
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
 sealed class UIEvent {
     data class Login(
@@ -21,7 +22,7 @@ enum class AppScreen{
 }
 
 abstract class IAppViewModel: IViewModel(){
-    abstract val selectedScreenIndexState: MutableState<AppScreen>
+    abstract val selectedScreenIndexState: StateFlow<AppScreen>
     abstract fun onUIEvent(event: UIEvent)
 }
 
@@ -29,13 +30,17 @@ class AppViewModel(
     private val prefsRepository: IUserPreferencesRepository,
 ): IAppViewModel() {
 
-    override val selectedScreenIndexState = mutableStateOf(AppScreen.INIT_DATA)
-
+    private val _selectedScreenIndexState = MutableStateFlow(AppScreen.INIT_DATA)
+    override val selectedScreenIndexState= _selectedScreenIndexState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _selectedScreenIndexState.value
+    )
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
     init {
          //init data here
-         selectedScreenIndexState.value = AppScreen.LOGIN
+         _selectedScreenIndexState.value = AppScreen.LOGIN
     }
 
     override fun onUIEvent(event: UIEvent) {
@@ -54,10 +59,10 @@ class AppViewModel(
             prefsRepository.saveUser(user)
         }
 
-        selectedScreenIndexState.value = AppScreen.MAIN
+        _selectedScreenIndexState.value = AppScreen.MAIN
     }
 
     private fun logout() {
-        selectedScreenIndexState.value = AppScreen.LOGIN
+        _selectedScreenIndexState.value = AppScreen.LOGIN
     }
 }
