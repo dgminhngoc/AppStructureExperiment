@@ -3,17 +3,20 @@
 package com.example.myapplication.viewmodel
 
 import androidx.compose.runtime.compositionLocalOf
+import com.example.myapplication.domain.DataRepository
 import com.example.myapplication.domain.IDataRepository
+import com.example.myapplication.domain.IUserPreferencesRepository
+import com.example.myapplication.domain.UserPreferencesRepository
 
-val localViewModelProvider = compositionLocalOf<ViewModelProvider> { error("ViewModelProvider not set") }
+val localProvider = compositionLocalOf<Provider> { error("ViewModelProvider not set") }
 
-interface IViewModelProvider {
+interface IProvider {
     fun <T: IViewModel> getViewModel(ofClass: Class<T>): T
+    fun getDataRepository(): IDataRepository
+    fun getUserReferencesRepository(): IUserPreferencesRepository
 }
 
-class ViewModelProvider(
-    private val dataRepository: IDataRepository
-): IViewModelProvider {
+class Provider: IProvider {
     private val viewModels = mutableMapOf<String, IViewModel>()
 
     override fun <T: IViewModel> getViewModel(ofClass: Class<T>): T{
@@ -22,6 +25,9 @@ class ViewModelProvider(
         var viewModel: IViewModel? = viewModels[className]
         if(viewModel == null) {
             viewModel = when(className) {
+                IAppViewModel::class.java.name -> {
+                    AppViewModel(getUserReferencesRepository())
+                }
                 ILoginScreenViewModel::class.java.name -> {
                     LoginScreenViewModel().also {
                         it.setOnClearedAction {
@@ -37,21 +43,21 @@ class ViewModelProvider(
                     }
                 }
                 ILoginPageViewModel::class.java.name -> {
-                    LoginPageViewModel(dataRepository).also {
+                    LoginPageViewModel(getDataRepository()).also {
                         it.setOnClearedAction {
                             removeViewModel(ILoginPageViewModel::class.java)
                         }
                     }
                 }
                 IRegistrationPageViewModel::class.java.name -> {
-                    RegistrationPageViewModel(dataRepository).also {
+                    RegistrationPageViewModel(getDataRepository()).also {
                         it.setOnClearedAction {
                             removeViewModel(IRegistrationPageViewModel::class.java)
                         }
                     }
                 }
                 IResetPasswordPageViewModel::class.java.name -> {
-                    ResetPasswordPageViewModel(dataRepository).also {
+                    ResetPasswordPageViewModel(getDataRepository()).also {
                         it.setOnClearedAction {
                             removeViewModel(IResetPasswordPageViewModel::class.java)
                         }
@@ -94,6 +100,14 @@ class ViewModelProvider(
         }
 
         return viewModel as T
+    }
+
+    override fun getDataRepository(): IDataRepository {
+        return DataRepository()
+    }
+
+    override fun getUserReferencesRepository(): IUserPreferencesRepository {
+        return UserPreferencesRepository()
     }
 
     private fun <T: IViewModel> removeViewModel(ofClass: Class<T>) {

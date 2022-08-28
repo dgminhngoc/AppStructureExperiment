@@ -11,7 +11,7 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun MainScreen(
-    mainScreenViewModel: IMainScreenViewModel = localViewModelProvider.current.getViewModel(IMainScreenViewModel::class.java),
+    mainScreenViewModel: IMainScreenViewModel = localProvider.current.getViewModel(IMainScreenViewModel::class.java),
 ) {
 
     val items = listOf("News", "Videos", "Products", "Contacts")

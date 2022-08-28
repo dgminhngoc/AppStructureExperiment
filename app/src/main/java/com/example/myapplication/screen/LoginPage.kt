@@ -12,9 +12,9 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun LoginPage(
-    loginPageViewModel: ILoginPageViewModel = localViewModelProvider.current.getViewModel(ILoginPageViewModel::class.java),
-    loginScreenViewModel: ILoginScreenViewModel = localViewModelProvider.current.getViewModel(ILoginScreenViewModel::class.java),
-    appViewModel: IAppViewModel = localAppViewModel.current,
+    loginPageViewModel: ILoginPageViewModel = localProvider.current.getViewModel(ILoginPageViewModel::class.java),
+    loginScreenViewModel: ILoginScreenViewModel = localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
+    appViewModel: IAppViewModel = localProvider.current.getViewModel(IAppViewModel::class.java),
 ) {
 
     DisposableEffect(loginScreenViewModel.selectedPageIndexState.value) {

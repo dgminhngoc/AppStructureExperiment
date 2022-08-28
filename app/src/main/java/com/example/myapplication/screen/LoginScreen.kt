@@ -6,8 +6,8 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun LoginScreen(
-    loginScreenViewModel: ILoginScreenViewModel = localViewModelProvider.current.getViewModel(ILoginScreenViewModel::class.java),
-    appViewModel: IAppViewModel = localAppViewModel.current,
+    loginScreenViewModel: ILoginScreenViewModel = localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
+    appViewModel: IAppViewModel = localProvider.current.getViewModel(IAppViewModel::class.java),
 ) {
     DisposableEffect(appViewModel.selectedScreenIndexState.value) {
         onDispose {

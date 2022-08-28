@@ -13,8 +13,8 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun RegisterPage(
-    registrationPageViewModel: IRegistrationPageViewModel = localViewModelProvider.current.getViewModel(IRegistrationPageViewModel::class.java),
-    loginScreenViewModel: ILoginScreenViewModel = localViewModelProvider.current.getViewModel(ILoginScreenViewModel::class.java)
+    registrationPageViewModel: IRegistrationPageViewModel = localProvider.current.getViewModel(IRegistrationPageViewModel::class.java),
+    loginScreenViewModel: ILoginScreenViewModel = localProvider.current.getViewModel(ILoginScreenViewModel::class.java)
 ) {
     DisposableEffect(loginScreenViewModel.selectedPageIndexState.value) {
         onDispose {
