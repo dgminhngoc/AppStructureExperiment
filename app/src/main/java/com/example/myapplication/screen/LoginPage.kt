@@ -12,10 +12,19 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun LoginPage(
-    loginPageViewModel: ILoginPageViewModel = localAppViewModel.current.loginScreenViewModel.loginPageViewModel,
-    loginScreenViewModel: ILoginScreenViewModel = localAppViewModel.current.loginScreenViewModel,
+    loginPageViewModel: ILoginPageViewModel = localViewModelProvider.current.getViewModel(ILoginPageViewModel::class.java),
+    loginScreenViewModel: ILoginScreenViewModel = localViewModelProvider.current.getViewModel(ILoginScreenViewModel::class.java),
     appViewModel: IAppViewModel = localAppViewModel.current,
 ) {
+
+    DisposableEffect(loginScreenViewModel.selectedPageIndexState.value) {
+        onDispose {
+            if(loginScreenViewModel.selectedPageIndexState.value != LoginNavigatePage.LOGIN) {
+                loginPageViewModel.onCleared()
+            }
+        }
+    }
+
     if(loginPageViewModel.loginFormSubmittedState.value.isSuccessful) {
         loginPageViewModel.loginFormSubmittedState.value.user?.let {
             appViewModel.onUIEvent(UIEvent.Login(user = it))

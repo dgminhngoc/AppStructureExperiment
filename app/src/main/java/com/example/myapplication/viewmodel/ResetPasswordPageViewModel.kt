@@ -85,8 +85,8 @@ class ResetPasswordPageViewModel(
         }
     }
 
-    override fun dispose() {
-        super.dispose()
+    override fun onCleared() {
+        super.onCleared()
 
         resetPasswordJob?.cancel()
         Log.d("TEST", "RegisterPageViewModel dispose")

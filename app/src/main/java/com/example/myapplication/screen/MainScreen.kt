@@ -11,8 +11,9 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun MainScreen(
-    mainScreenViewModel: IMainScreenViewModel = localAppViewModel.current.mainScreenViewModel
+    mainScreenViewModel: IMainScreenViewModel = localViewModelProvider.current.getViewModel(IMainScreenViewModel::class.java),
 ) {
+
     val items = listOf("News", "Videos", "Products", "Contacts")
     Scaffold(
         bottomBar = {

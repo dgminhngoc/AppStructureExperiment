@@ -21,6 +21,10 @@ private val Context.dataStore by preferencesDataStore(
     name = USER_PREFERENCES_NAME
 )
 
+val vmProvider = ViewModelProvider(
+    dataRepository = DataRepository()
+)
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,17 +33,16 @@ class MainActivity : ComponentActivity() {
         val appViewModel = ViewModelProvider(
             this,
             AppViewModelFactory(
-                dataRepository = DataRepository(),
                 prefsRepository = UserPreferencesRepository(dataStore)
             )
         )[AppViewModel::class.java]
 
         setContent {
             MyApplicationTheme {
-
-
                 CompositionLocalProvider(localAppViewModel provides appViewModel) {
-                    App(appViewModel = appViewModel)
+                    CompositionLocalProvider(localViewModelProvider provides vmProvider) {
+                        App()
+                    }
                 }
 
             }
@@ -48,7 +51,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun App(appViewModel: IAppViewModel) {
+fun App(appViewModel: IAppViewModel = localAppViewModel.current) {
     when(appViewModel.selectedScreenIndexState.value) {
         AppScreen.INIT_DATA -> {
             InitDataScreen()
@@ -57,7 +60,7 @@ fun App(appViewModel: IAppViewModel) {
             LoginScreen()
         }
         AppScreen.MAIN -> {
-            MainScreen(mainScreenViewModel = localAppViewModel.current.mainScreenViewModel)
+            MainScreen()
         }
     }
 }

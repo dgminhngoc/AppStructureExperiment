@@ -33,32 +33,10 @@ interface IAppViewModel{
 val localAppViewModel = compositionLocalOf<AppViewModel> { error("AppViewModel not set") }
 
 class AppViewModel(
-    private val dataRepository: IDataRepository,
     private val prefsRepository: IUserPreferencesRepository,
 ): IAppViewModel, ViewModel() {
 
     override val selectedScreenIndexState = mutableStateOf(AppScreen.INIT_DATA)
-
-    ///AppViewModel has instance of sub-viewmodels to store current states of app
-    ///Storing current states is quite importance for responsive design, that view re-composed very
-    ///often. For example when user change size of the app (on tablets or foldable devices), display
-    ///language change,...the Activity will surely be recreated. When states aren't saved, almost
-    ///everything would be reset and users would lose their progress.
-    ///These sub-viewmodels should be nullable, so they can be cleared by GC.
-    //_loginScreenViewModel should be assigned NULL when not needed
-    private var _loginScreenViewModel: LoginScreenViewModel? = null
-    val loginScreenViewModel: LoginScreenViewModel
-        get() {
-            _loginScreenViewModel = _loginScreenViewModel ?: LoginScreenViewModel(dataRepository)
-            return _loginScreenViewModel!!
-        }
-    //_mainScreenViewModel should be assigned NULL when not needed
-    private var _mainScreenViewModel: MainScreenViewModel? = null
-    val mainScreenViewModel: MainScreenViewModel
-        get() {
-            _mainScreenViewModel = _mainScreenViewModel ?: MainScreenViewModel()
-            return _mainScreenViewModel!!
-        }
 
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
@@ -86,27 +64,20 @@ class AppViewModel(
         }
 
         selectedScreenIndexState.value = AppScreen.MAIN
-
-        _loginScreenViewModel?.dispose()
-        _loginScreenViewModel = null
     }
 
     private fun logout() {
         selectedScreenIndexState.value = AppScreen.LOGIN
-
-        _mainScreenViewModel?.dispose()
-        _mainScreenViewModel = null
     }
 }
 
 class AppViewModelFactory(
-    private val dataRepository: IDataRepository,
     private val prefsRepository: UserPreferencesRepository,
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AppViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return AppViewModel(dataRepository, prefsRepository) as T
+            return AppViewModel(prefsRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

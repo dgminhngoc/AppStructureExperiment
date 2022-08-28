@@ -61,7 +61,7 @@ class MainScreenViewModel: IMainScreenViewModel() {
         }
     }
 
-    override fun dispose() {
+    override fun onCleared() {
         disposeTabViewModel(BottomNavTab.HOME)
         disposeTabViewModel(BottomNavTab.VIDEOS)
         disposeTabViewModel(BottomNavTab.PRODUCTS)
@@ -71,19 +71,19 @@ class MainScreenViewModel: IMainScreenViewModel() {
     private fun disposeTabViewModel(bottomNavTab: BottomNavTab) {
         when(bottomNavTab) {
             BottomNavTab.HOME -> {
-                _homePageViewModel?.dispose()
+                _homePageViewModel?.onCleared()
                 _homePageViewModel = null
             }
             BottomNavTab.VIDEOS -> {
-                _videosPageViewModel?.dispose()
+                _videosPageViewModel?.onCleared()
                 _videosPageViewModel = null
             }
             BottomNavTab.PRODUCTS -> {
-                _productsPageViewModel?.dispose()
+                _productsPageViewModel?.onCleared()
                 _productsPageViewModel = null
             }
             BottomNavTab.CONTACTS -> {
-                _contactsPageViewModel?.dispose()
+                _contactsPageViewModel?.onCleared()
                 _contactsPageViewModel = null
             }
         }

@@ -57,6 +57,11 @@ class RegistrationPageViewModel(
     private var registrationJob: Job? = null
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
+    init {
+        Log.d("TEST", "RegisterPageViewModel init")
+
+    }
+
     override fun onEvent(event: RegistrationFormEvent) {
         when(event) {
             is RegistrationFormEvent.RegistrationFormChanged -> {
@@ -131,8 +136,8 @@ class RegistrationPageViewModel(
         }
     }
 
-    override fun dispose() {
-        super.dispose()
+    override fun onCleared() {
+        super.onCleared()
 
         registrationJob?.cancel()
         Log.d("TEST", "RegisterPageViewModel dispose")

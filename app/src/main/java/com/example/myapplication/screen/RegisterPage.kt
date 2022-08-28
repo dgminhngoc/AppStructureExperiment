@@ -13,9 +13,17 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun RegisterPage(
-    registrationPageViewModel: IRegistrationPageViewModel = localAppViewModel.current.loginScreenViewModel.registrationPageViewModel,
-    loginScreenViewModel: ILoginScreenViewModel = localAppViewModel.current.loginScreenViewModel
+    registrationPageViewModel: IRegistrationPageViewModel = localViewModelProvider.current.getViewModel(IRegistrationPageViewModel::class.java),
+    loginScreenViewModel: ILoginScreenViewModel = localViewModelProvider.current.getViewModel(ILoginScreenViewModel::class.java)
 ) {
+    DisposableEffect(loginScreenViewModel.selectedPageIndexState.value) {
+        onDispose {
+            if(loginScreenViewModel.selectedPageIndexState.value != LoginNavigatePage.REGISTER) {
+                registrationPageViewModel.onCleared()
+            }
+        }
+    }
+
     if(!registrationPageViewModel.registrationSubmittedState.value) {
         RegisterFormPage(
             registrationPageViewModel = registrationPageViewModel,
@@ -34,12 +42,12 @@ fun RegisterFormPage(
     registrationPageViewModel: IRegistrationPageViewModel,
     loginScreenViewModel: ILoginScreenViewModel
 ) {
-    var email by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.email) }
-    var password by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.password) }
-    var repeatedPassword by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.repeatedPassword) }
-    var firstName by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.firstName) }
-    var lastName by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.lastname) }
-    var isTermsAccepted by remember { mutableStateOf(registrationPageViewModel.registrationFormState.value.isTermsAccepted) }
+    var email = registrationPageViewModel.registrationFormState.value.email
+    var password = registrationPageViewModel.registrationFormState.value.password
+    var repeatedPassword = registrationPageViewModel.registrationFormState.value.repeatedPassword
+    var firstName = registrationPageViewModel.registrationFormState.value.firstName
+    var lastName = registrationPageViewModel.registrationFormState.value.lastname
+    var isTermsAccepted = registrationPageViewModel.registrationFormState.value.isTermsAccepted
 
     Box {
         Column(

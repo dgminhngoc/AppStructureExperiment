@@ -105,8 +105,8 @@ class LoginPageViewModel(
         }
     }
 
-    override fun dispose() {
-        super.dispose()
+    override fun onCleared() {
+        super.onCleared()
 
         loginJob?.cancel()
         loginJob = null

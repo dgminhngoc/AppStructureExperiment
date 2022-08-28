@@ -12,9 +12,17 @@ import com.example.myapplication.viewmodel.*
 
 @Composable
 fun ResetPasswordPage(
-    resetPasswordPageViewModel: IResetPasswordPageViewModel = localAppViewModel.current.loginScreenViewModel.resetPasswordPageViewModel,
-    loginScreenViewModel: ILoginScreenViewModel = localAppViewModel.current.loginScreenViewModel
+    resetPasswordPageViewModel: IResetPasswordPageViewModel = localViewModelProvider.current.getViewModel(IResetPasswordPageViewModel::class.java),
+    loginScreenViewModel: ILoginScreenViewModel = localViewModelProvider.current.getViewModel(ILoginScreenViewModel::class.java),
 ) {
+    DisposableEffect(loginScreenViewModel.selectedPageIndexState.value) {
+        onDispose {
+            if(loginScreenViewModel.selectedPageIndexState.value != LoginNavigatePage.RESET_PASSWORD) {
+                resetPasswordPageViewModel.onCleared()
+            }
+        }
+    }
+
     if(!resetPasswordPageViewModel.resetPasswordSubmittedState.value) {
         ResetPasswordFormPage(
             resetPasswordPageViewModel = resetPasswordPageViewModel,
