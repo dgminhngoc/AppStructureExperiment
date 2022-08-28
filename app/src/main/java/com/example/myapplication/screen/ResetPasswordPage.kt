@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.viewmodel.*
+import localProvider
 
 @Composable
 fun ResetPasswordPage(
@@ -41,7 +42,7 @@ fun ResetPasswordFormPage(
     resetPasswordPageViewModel: IResetPasswordPageViewModel,
     loginScreenViewModel: ILoginScreenViewModel
 ) {
-    var email by remember { mutableStateOf(resetPasswordPageViewModel.resetPasswordFormState.value.email) }
+    var email = resetPasswordPageViewModel.resetPasswordFormState.value.email
 
     Box {
         Column(

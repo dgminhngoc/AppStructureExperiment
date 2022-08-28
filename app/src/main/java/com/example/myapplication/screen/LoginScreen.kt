@@ -3,6 +3,7 @@ package com.example.myapplication.screen
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import com.example.myapplication.viewmodel.*
+import localProvider
 
 @Composable
 fun LoginScreen(

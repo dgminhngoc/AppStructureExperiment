@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.viewmodel.*
+import localProvider
 
 @Composable
 fun LoginPage(
@@ -42,8 +43,8 @@ fun LoginPage(
                 end = 30.dp,
             )
     ) {
-        var email by remember { mutableStateOf(loginPageViewModel.loginFormState.value.email) }
-        var password by remember { mutableStateOf(loginPageViewModel.loginFormState.value.password) }
+        var email = loginPageViewModel.loginFormState.value.email
+        var password = loginPageViewModel.loginFormState.value.password
 
         TextField(
             modifier = Modifier

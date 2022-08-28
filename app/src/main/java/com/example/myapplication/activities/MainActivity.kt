@@ -1,5 +1,6 @@
 package com.example.myapplication.activities
 
+import Provider
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,6 +10,7 @@ import com.example.myapplication.screen.MainScreen
 import com.example.myapplication.screen.LoginScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.*
+import localProvider
 
 val provider = Provider()
 

@@ -1,12 +1,11 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.example.myapplication.viewmodel
-
 import androidx.compose.runtime.compositionLocalOf
 import com.example.myapplication.domain.DataRepository
 import com.example.myapplication.domain.IDataRepository
 import com.example.myapplication.domain.IUserPreferencesRepository
 import com.example.myapplication.domain.UserPreferencesRepository
+import com.example.myapplication.viewmodel.*
 
 val localProvider = compositionLocalOf<Provider> { error("Provider not set") }
 

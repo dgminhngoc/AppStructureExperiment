@@ -3,7 +3,7 @@ package com.example.myapplication.screen
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import com.example.myapplication.viewmodel.IHomePageViewModel
-import com.example.myapplication.viewmodel.localProvider
+import localProvider
 
 @Composable
 fun HomePage(
