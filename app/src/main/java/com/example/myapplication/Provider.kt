@@ -19,8 +19,8 @@ interface IProvider {
 class Provider: IProvider {
     private val viewModels = mutableMapOf<String, IViewModel>()
 
-    override fun <T: IViewModel> getViewModel(ofClass: Class<T>): T{
-        val className = ofClass.name
+    override fun <T: IViewModel> getViewModel(vmClass: Class<T>): T{
+        val className = vmClass.name
 
         var viewModel: IViewModel? = viewModels[className]
         if(viewModel == null) {
@@ -110,8 +110,8 @@ class Provider: IProvider {
         return UserPreferencesRepository()
     }
 
-    private fun <T: IViewModel> removeViewModel(ofClass: Class<T>) {
-        val className = ofClass.name
+    private fun <T: IViewModel> removeViewModel(vmClass: Class<T>) {
+        val className = vmClass.name
         val viewModel: IViewModel? = viewModels[className]
         viewModel?.let {
             viewModels.remove(className)

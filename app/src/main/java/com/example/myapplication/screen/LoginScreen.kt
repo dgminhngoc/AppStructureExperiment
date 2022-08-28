@@ -16,6 +16,7 @@ fun LoginScreen(
             }
         }
     }
+
     Box {
         when (loginScreenViewModel.selectedPageIndexState.value) {
             LoginNavigatePage.LOGIN -> {
