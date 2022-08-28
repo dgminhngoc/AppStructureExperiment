@@ -1,13 +1,14 @@
 package com.example.myapplication.screen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Checkbox
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.viewmodel.*
 import localProvider
@@ -57,13 +58,14 @@ fun RegisterFormPage(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .padding(
                     start = 30.dp,
                     end = 30.dp,
                 )
         ) {
 
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = email,
@@ -81,10 +83,19 @@ fun RegisterFormPage(
                 isError = registrationPageViewModel.registrationFormState.value.emailError != null,
                 label = { Text("E-Mail") }
             )
-            TextField(
+            registrationPageViewModel.registrationFormState.value.emailError?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colors.error,
+                    style = MaterialTheme.typography.caption,
+                    modifier = Modifier.padding(start = 16.dp, top = 0.dp)
+                )
+            }
+            OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = password,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 onValueChange = {
                     password = it
                     registrationPageViewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
@@ -99,9 +110,18 @@ fun RegisterFormPage(
                 isError = registrationPageViewModel.registrationFormState.value.passwordError != null,
                 label = { Text("Password") }
             )
-            TextField(
+            registrationPageViewModel.registrationFormState.value.passwordError?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colors.error,
+                    style = MaterialTheme.typography.caption,
+                    modifier = Modifier.padding(start = 16.dp, top = 0.dp)
+                )
+            }
+            OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 value = repeatedPassword,
                 onValueChange = {
                     repeatedPassword = it
@@ -117,7 +137,15 @@ fun RegisterFormPage(
                 isError = registrationPageViewModel.registrationFormState.value.repeatedPasswordError != null,
                 label = { Text("Repeat password") }
             )
-            TextField(
+            registrationPageViewModel.registrationFormState.value.repeatedPasswordError?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colors.error,
+                    style = MaterialTheme.typography.caption,
+                    modifier = Modifier.padding(start = 16.dp, top = 0.dp)
+                )
+            }
+            OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = firstName,
@@ -135,7 +163,15 @@ fun RegisterFormPage(
                 isError = registrationPageViewModel.registrationFormState.value.firstNameError != null,
                 label = { Text("First Name") }
             )
-            TextField(
+            registrationPageViewModel.registrationFormState.value.firstNameError?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colors.error,
+                    style = MaterialTheme.typography.caption,
+                    modifier = Modifier.padding(start = 16.dp, top = 0.dp)
+                )
+            }
+            OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = lastName,
@@ -153,6 +189,14 @@ fun RegisterFormPage(
                 isError = registrationPageViewModel.registrationFormState.value.lastnameError != null,
                 label = { Text("Last Name") }
             )
+            registrationPageViewModel.registrationFormState.value.lastnameError?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colors.error,
+                    style = MaterialTheme.typography.caption,
+                    modifier = Modifier.padding(start = 16.dp, top = 0.dp)
+                )
+            }
 
             Row {
                 Checkbox(
@@ -172,9 +216,13 @@ fun RegisterFormPage(
                 )
                 Text(text = "Terms Accept", modifier = Modifier.padding(16.dp))
             }
-
             registrationPageViewModel.registrationFormState.value.isTermsAcceptedError?.let {
-                Text(text = it)
+                Text(
+                    text = it,
+                    color = MaterialTheme.colors.error,
+                    style = MaterialTheme.typography.caption,
+                    modifier = Modifier.padding(start = 16.dp, top = 0.dp)
+                )
             }
 
             Button(
