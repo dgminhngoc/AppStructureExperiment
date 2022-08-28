@@ -25,6 +25,7 @@ fun MainScreen(
         }
     }
 
+    val mainScreenSelectedTabIndexState by mainScreenViewModel.selectedTabIndexState.collectAsState()
     val items = listOf("News", "Videos", "Products", "Contacts")
     Scaffold(
         bottomBar = {
@@ -35,7 +36,7 @@ fun MainScreen(
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
                         label = { Text(item) },
-                        selected = mainScreenViewModel.selectedTabIndexState.value.index == index,
+                        selected = mainScreenSelectedTabIndexState.index == index,
                         onClick = { mainScreenViewModel.onEvent(when(index) {
                             0 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.HOME)
                             1 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.VIDEOS)
@@ -49,7 +50,7 @@ fun MainScreen(
         },
         content = {
             Box(modifier = Modifier.padding(it)) {
-                when(mainScreenViewModel.selectedTabIndexState.value) {
+                when(mainScreenSelectedTabIndexState) {
                     BottomNavTab.HOME -> {
                         HomePage()
                     }

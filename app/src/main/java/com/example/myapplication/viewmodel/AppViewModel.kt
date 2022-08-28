@@ -1,7 +1,5 @@
 package com.example.myapplication.viewmodel
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.example.myapplication.domain.IUserPreferencesRepository
 import com.example.myapplication.models.User
 import kotlinx.coroutines.*

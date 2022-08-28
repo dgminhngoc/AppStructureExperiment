@@ -2,6 +2,9 @@ package com.example.myapplication.viewmodel
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 
 enum class BottomNavTab(val index: Int) {
     HOME(0),
@@ -17,17 +20,22 @@ sealed class MainScreenEvent {
 }
 
 abstract class IMainScreenViewModel: IViewModel() {
-    abstract val selectedTabIndexState: MutableState<BottomNavTab>
+    abstract val selectedTabIndexState: StateFlow<BottomNavTab>
     abstract fun onEvent(event: MainScreenEvent)
 }
 
 class MainScreenViewModel: IMainScreenViewModel() {
-    override val selectedTabIndexState = mutableStateOf(BottomNavTab.HOME)
+    private val _selectedTabIndexState = MutableStateFlow(BottomNavTab.HOME)
+    override val selectedTabIndexState= _selectedTabIndexState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _selectedTabIndexState.value
+    )
 
     override fun onEvent(event: MainScreenEvent) {
         when(event) {
             is MainScreenEvent.MainBottomTabNavigate -> {
-                selectedTabIndexState.value = event.tab
+                _selectedTabIndexState.value = event.tab
             }
         }
     }
