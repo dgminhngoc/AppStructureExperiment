@@ -109,52 +109,62 @@ class DataRepository: IDataRepository {
         var errorCode: Int? = null
         var exception: Exception? = null
 
-        try {
-            val response = HttpClient().post("$SERVER_URL$API_LOGIN"){
-                headers {
-                    append(
-                        name = "Content-Type",
-                        value = "application/json"
-                    )
-                    append(
-                        name = "Accept-Version",
-                        value = "1.0.0"
-                    )
-                }
-                setBody(
-                    body = JsonObject().apply {
-                        addProperty("username", email)
-                        addProperty("password", password)
-                    }.asString
-                )
-            }
+//        try {
+//            val response = HttpClient().post("$SERVER_URL$API_LOGIN"){
+//                headers {
+//                    append(
+//                        name = "Content-Type",
+//                        value = "application/json"
+//                    )
+//                    append(
+//                        name = "Accept-Version",
+//                        value = "1.0.0"
+//                    )
+//                }
+//                setBody(
+//                    body = JsonObject().apply {
+//                        addProperty("username", email)
+//                        addProperty("password", password)
+//                    }.asString
+//                )
+//            }
+//
+//            when(response.status) {
+//                HttpStatusCode.OK -> {
+//                    user = User(
+//                        id = 0,
+//                        email = "tim.nguyen@solunar.de",
+//                        firstName = "Tim",
+//                        lastName = "Nguyen",
+//                        accessToken = "access_token",
+//                        refreshToken = "refresh_token",
+//                        userRole = "ROLE_USER"
+//                    )
+//                    return RequestResult.OnSuccess(data = user)
+//                }
+//                else -> {
+//                    errorCode = response.status.value
+//                }
+//            }
+//        }
+//        catch (e: Exception) {
+//            exception = e
+//        }
 
-            when(response.status) {
-                HttpStatusCode.OK -> {
-                    user = User(
-                        id = 0,
-                        email = "tim.nguyen@solunar.de",
-                        firstName = "Tim",
-                        lastName = "Nguyen",
-                        accessToken = "access_token",
-                        refreshToken = "refresh_token",
-                        userRole = "ROLE_USER"
-                    )
-                    return RequestResult.OnSuccess(data = user)
-                }
-                else -> {
-                    errorCode = response.status.value
-                }
-            }
-        }
-        catch (e: Exception) {
-            exception = e
-        }
-
-        return RequestResult.OnError(
-            errorCode = errorCode,
-            exception = exception,
+        user = User(
+            id = 0,
+            email = "tim.nguyen@solunar.de",
+            firstName = "Tim",
+            lastName = "Nguyen",
+            accessToken = "access_token",
+            refreshToken = "refresh_token",
+            userRole = "ROLE_USER"
         )
+        return RequestResult.OnSuccess(data = user)
+//        return RequestResult.OnError(
+//            errorCode = errorCode,
+//            exception = exception,
+//        )
     }
 
     override suspend fun resetPassword(email: String): RequestResult<String> {

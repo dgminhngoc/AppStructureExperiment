@@ -16,9 +16,10 @@ fun ResetPasswordPage(
     resetPasswordPageViewModel: IResetPasswordPageViewModel = localProvider.current.getViewModel(IResetPasswordPageViewModel::class.java),
     loginScreenViewModel: ILoginScreenViewModel = localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
 ) {
-    DisposableEffect(loginScreenViewModel.selectedPageIndexState.value) {
+    val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
+    DisposableEffect(loginSelectedPageIndexState) {
         onDispose {
-            if(loginScreenViewModel.selectedPageIndexState.value != LoginNavigatePage.RESET_PASSWORD) {
+            if(loginSelectedPageIndexState != LoginNavigatePage.RESET_PASSWORD) {
                 resetPasswordPageViewModel.onCleared()
             }
         }

@@ -23,20 +23,23 @@ fun LoginPage(
     appViewModel: IAppViewModel = localProvider.current.getViewModel(IAppViewModel::class.java),
 ) {
 
-    DisposableEffect(loginScreenViewModel.selectedPageIndexState.value) {
+    val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
+    DisposableEffect(loginSelectedPageIndexState) {
         onDispose {
-            if(loginScreenViewModel.selectedPageIndexState.value != LoginNavigatePage.LOGIN) {
+            if(loginSelectedPageIndexState != LoginNavigatePage.LOGIN) {
                 loginPageViewModel.onCleared()
             }
         }
     }
 
-    if(loginPageViewModel.loginFormSubmittedState.value.isSuccessful) {
-        loginPageViewModel.loginFormSubmittedState.value.user?.let {
+    val loginFormSubmittedState by loginPageViewModel.loginFormSubmittedState.collectAsState()
+    if(loginFormSubmittedState.isSuccessful) {
+        loginFormSubmittedState.user?.let {
             appViewModel.onUIEvent(UIEvent.Login(user = it))
         }
     }
 
+    val loginFormState by loginPageViewModel.loginFormState.collectAsState()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -49,8 +52,8 @@ fun LoginPage(
                 end = 30.dp,
             )
     ) {
-        var email = loginPageViewModel.loginFormState.value.email
-        var password = loginPageViewModel.loginFormState.value.password
+        var email = loginFormState.email
+        var password = loginFormState.password
 
         OutlinedTextField(
             modifier = Modifier
@@ -63,10 +66,10 @@ fun LoginPage(
                     password = password,
                 ))
             },
-            isError = loginPageViewModel.loginFormState.value.emailError != null,
+            isError = loginFormState.emailError != null,
             label = { Text("E-Mail") }
         )
-        loginPageViewModel.loginFormState.value.emailError?.let {
+        loginFormState.emailError?.let {
             Text(
                 text = it,
                 color = MaterialTheme.colors.error,
@@ -86,10 +89,10 @@ fun LoginPage(
                     password = password,
                 ))
             },
-            isError = loginPageViewModel.loginFormState.value.passwordError != null,
+            isError = loginFormState.passwordError != null,
             label = { Text("Password") }
         )
-        loginPageViewModel.loginFormState.value.passwordError?.let {
+        loginFormState.passwordError?.let {
             Text(
                 text = it,
                 color = MaterialTheme.colors.error,

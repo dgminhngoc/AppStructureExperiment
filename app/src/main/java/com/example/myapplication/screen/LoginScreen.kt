@@ -19,7 +19,7 @@ fun LoginScreen(
     }
 
     Box {
-        when (loginScreenViewModel.selectedPageIndexState.value) {
+        when (loginScreenViewModel.selectedPageIndexState.collectAsState().value) {
             LoginNavigatePage.LOGIN -> {
                 LoginPage()
             }

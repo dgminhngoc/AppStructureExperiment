@@ -15,12 +15,15 @@ import localProvider
 
 @Composable
 fun RegisterPage(
-    registrationPageViewModel: IRegistrationPageViewModel = localProvider.current.getViewModel(IRegistrationPageViewModel::class.java),
-    loginScreenViewModel: ILoginScreenViewModel = localProvider.current.getViewModel(ILoginScreenViewModel::class.java)
+    registrationPageViewModel: IRegistrationPageViewModel =
+        localProvider.current.getViewModel(IRegistrationPageViewModel::class.java),
+    loginScreenViewModel: ILoginScreenViewModel =
+        localProvider.current.getViewModel(ILoginScreenViewModel::class.java)
 ) {
-    DisposableEffect(loginScreenViewModel.selectedPageIndexState.value) {
+    val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
+    DisposableEffect(loginSelectedPageIndexState) {
         onDispose {
-            if(loginScreenViewModel.selectedPageIndexState.value != LoginNavigatePage.REGISTER) {
+            if(loginSelectedPageIndexState != LoginNavigatePage.REGISTER) {
                 registrationPageViewModel.onCleared()
             }
         }

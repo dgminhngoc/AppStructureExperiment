@@ -1,6 +1,6 @@
 package com.example.myapplication.viewmodel
 
-import androidx.compose.runtime.MutableState
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.myapplication.domain.IDataRepository
 import com.example.myapplication.domain.RequestResult
@@ -8,6 +8,7 @@ import com.example.myapplication.models.User
 import com.example.myapplication.validators.EmailValidator
 import com.example.myapplication.validators.PasswordValidator
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
 sealed class LoginFormEvent {
     data class LoginFormChanged(
@@ -31,8 +32,8 @@ data class LoginFormSubmittedState(
 )
 
 abstract class ILoginPageViewModel: IViewModel() {
-    abstract val loginFormState: MutableState<LoginFormState>
-    abstract val loginFormSubmittedState: MutableState<LoginFormSubmittedState>
+    abstract val loginFormState: StateFlow<LoginFormState>
+    abstract val loginFormSubmittedState: StateFlow<LoginFormSubmittedState>
     abstract fun onEvent(event: LoginFormEvent)
 }
 
@@ -42,8 +43,18 @@ class LoginPageViewModel(
     private val passwordValidator: PasswordValidator = PasswordValidator(),
 ): ILoginPageViewModel() {
 
-    override val loginFormState = mutableStateOf(LoginFormState())
-    override val loginFormSubmittedState = mutableStateOf(LoginFormSubmittedState())
+    private val _loginFormState = MutableStateFlow(LoginFormState())
+    override val loginFormState = _loginFormState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _loginFormState.value
+    )
+    private val _loginFormSubmittedState = MutableStateFlow(LoginFormSubmittedState())
+    override val loginFormSubmittedState = _loginFormSubmittedState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _loginFormSubmittedState.value
+    )
 
     private var loginJob: Job? = null
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
@@ -51,7 +62,7 @@ class LoginPageViewModel(
     override fun onEvent(event: LoginFormEvent) {
         when(event) {
             is LoginFormEvent.LoginFormChanged -> {
-                loginFormState.value = LoginFormState(
+                _loginFormState.value = LoginFormState(
                     email = event.email,
                     password = event.password,
                 )
@@ -63,8 +74,8 @@ class LoginPageViewModel(
     }
 
     private fun submitData() {
-        val emailValidationResult = emailValidator.execute(loginFormState.value.email)
-        val passwordValidationResult = passwordValidator.execute(loginFormState.value.password)
+        val emailValidationResult = emailValidator.execute(_loginFormState.value.email)
+        val passwordValidationResult = passwordValidator.execute(_loginFormState.value.password)
 
         val hasError = listOf(
             emailValidationResult,
@@ -74,7 +85,7 @@ class LoginPageViewModel(
         }
 
         if(hasError) {
-            loginFormState.value = loginFormState.value.copy(
+            _loginFormState.value = _loginFormState.value.copy(
                 emailError = emailValidationResult.errorMessage,
                 passwordError = passwordValidationResult.errorMessage,
             )
@@ -84,12 +95,12 @@ class LoginPageViewModel(
 
         loginJob = CoroutineScope(defaultDispatcher).launch {
             when(val result = dataRepository.authenticate(
-                email = loginFormState.value.email,
-                password = loginFormState.value.password
+                email = _loginFormState.value.email,
+                password = _loginFormState.value.password
             )){
                 is RequestResult.OnSuccess -> {
                     result.data?.let {
-                        loginFormSubmittedState.value = LoginFormSubmittedState(
+                        _loginFormSubmittedState.value = LoginFormSubmittedState(
                             isSuccessful = true,
                             user = it
                         )
@@ -97,7 +108,7 @@ class LoginPageViewModel(
 
                 }
                 is RequestResult.OnError -> {
-                    loginFormSubmittedState.value = LoginFormSubmittedState(
+                    _loginFormSubmittedState.value = LoginFormSubmittedState(
                         isSuccessful = false,
                     )
                 }
@@ -110,5 +121,7 @@ class LoginPageViewModel(
 
         loginJob?.cancel()
         loginJob = null
+
+        Log.d("TEST", "LoginPageViewModel onCleared")
     }
 }

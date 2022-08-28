@@ -1,7 +1,8 @@
 package com.example.myapplication.viewmodel
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 
 sealed class LoginScreenEvent {
     data class LoginPageNavigate(
@@ -16,18 +17,23 @@ enum class LoginNavigatePage {
 }
 
 abstract class ILoginScreenViewModel: IViewModel() {
-    abstract val selectedPageIndexState: MutableState<LoginNavigatePage>
+    abstract val selectedPageIndexState: StateFlow<LoginNavigatePage>
     abstract fun onEvent(event: LoginScreenEvent)
 }
 
 class LoginScreenViewModel: ILoginScreenViewModel() {
 
-    override val selectedPageIndexState: MutableState<LoginNavigatePage> = mutableStateOf(LoginNavigatePage.LOGIN)
+    private val _selectedPageIndexState = MutableStateFlow(LoginNavigatePage.LOGIN)
+    override val selectedPageIndexState= _selectedPageIndexState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _selectedPageIndexState.value
+    )
 
     override fun onEvent(event: LoginScreenEvent) {
         when(event) {
             is LoginScreenEvent.LoginPageNavigate -> {
-                selectedPageIndexState.value = event.page
+                _selectedPageIndexState.value = event.page
             }
         }
     }
