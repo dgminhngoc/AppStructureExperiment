@@ -8,10 +8,10 @@ import com.example.myapplication.domain.IDataRepository
 import com.example.myapplication.domain.IUserPreferencesRepository
 import com.example.myapplication.domain.UserPreferencesRepository
 
-val localProvider = compositionLocalOf<Provider> { error("ViewModelProvider not set") }
+val localProvider = compositionLocalOf<Provider> { error("Provider not set") }
 
 interface IProvider {
-    fun <T: IViewModel> getViewModel(ofClass: Class<T>): T
+    fun <T: IViewModel> getViewModel(vmClass: Class<T>): T
     fun getDataRepository(): IDataRepository
     fun getUserReferencesRepository(): IUserPreferencesRepository
 }
