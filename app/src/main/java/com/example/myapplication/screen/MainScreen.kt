@@ -12,8 +12,10 @@ import localProvider
 
 @Composable
 fun MainScreen(
-    mainScreenViewModel: IMainScreenViewModel = localProvider.current.getViewModel(IMainScreenViewModel::class.java),
-    appViewModel: IAppViewModel = localProvider.current.getViewModel(IAppViewModel::class.java),
+    mainScreenViewModel: IMainScreenViewModel =
+        localProvider.current.getViewModel(IMainScreenViewModel::class.java),
+    appViewModel: IAppViewModel =
+        localProvider.current.getViewModel(IAppViewModel::class.java),
 ) {
 
     val appSelectedScreenIndexState by appViewModel.selectedScreenIndexState.collectAsState()

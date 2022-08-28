@@ -1,5 +1,3 @@
-@file:Suppress("UNCHECKED_CAST")
-
 import androidx.compose.runtime.compositionLocalOf
 import com.example.myapplication.domain.DataRepository
 import com.example.myapplication.domain.IDataRepository
@@ -18,6 +16,7 @@ interface IProvider {
 class Provider: IProvider {
     private val viewModels = mutableMapOf<String, IViewModel>()
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T: IViewModel> getViewModel(vmClass: Class<T>): T{
         val className = vmClass.name
 

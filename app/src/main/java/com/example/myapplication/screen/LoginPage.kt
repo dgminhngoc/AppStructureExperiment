@@ -18,9 +18,12 @@ import localProvider
 
 @Composable
 fun LoginPage(
-    loginPageViewModel: ILoginPageViewModel = localProvider.current.getViewModel(ILoginPageViewModel::class.java),
-    loginScreenViewModel: ILoginScreenViewModel = localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
-    appViewModel: IAppViewModel = localProvider.current.getViewModel(IAppViewModel::class.java),
+    loginPageViewModel: ILoginPageViewModel =
+        localProvider.current.getViewModel(ILoginPageViewModel::class.java),
+    loginScreenViewModel: ILoginScreenViewModel =
+        localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
+    appViewModel: IAppViewModel =
+        localProvider.current.getViewModel(IAppViewModel::class.java),
 ) {
 
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()

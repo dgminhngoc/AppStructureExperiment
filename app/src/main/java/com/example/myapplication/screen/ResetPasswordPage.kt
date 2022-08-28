@@ -13,8 +13,10 @@ import localProvider
 
 @Composable
 fun ResetPasswordPage(
-    resetPasswordPageViewModel: IResetPasswordPageViewModel = localProvider.current.getViewModel(IResetPasswordPageViewModel::class.java),
-    loginScreenViewModel: ILoginScreenViewModel = localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
+    resetPasswordPageViewModel: IResetPasswordPageViewModel =
+        localProvider.current.getViewModel(IResetPasswordPageViewModel::class.java),
+    loginScreenViewModel: ILoginScreenViewModel =
+        localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
 ) {
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {
