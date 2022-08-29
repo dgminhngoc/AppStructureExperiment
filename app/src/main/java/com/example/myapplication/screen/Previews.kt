@@ -1,10 +1,10 @@
 package com.example.myapplication.screen
 
-import Provider
+import com.example.myapplication.providers.ViewModelProvider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.Preview
-import localProvider
+import com.example.myapplication.providers.LocalViewModelProvider
 
 @Preview(
     widthDp = 300,
@@ -12,8 +12,8 @@ import localProvider
 )
 @Composable
 fun LoginPagePreview() {
-    val provider = Provider()
-    CompositionLocalProvider(localProvider provides provider) {
+    val provider = ViewModelProvider()
+    CompositionLocalProvider(LocalViewModelProvider provides provider) {
         LoginPage()
     }
 }

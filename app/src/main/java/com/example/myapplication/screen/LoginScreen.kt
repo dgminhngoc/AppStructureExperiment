@@ -2,15 +2,15 @@ package com.example.myapplication.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
+import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.viewmodel.*
-import localProvider
 
 @Composable
 fun LoginScreen(
     loginScreenViewModel: ILoginScreenViewModel =
-        localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
+        ViewModels.get(ILoginScreenViewModel::class.java),
     appViewModel: IAppViewModel =
-        localProvider.current.getViewModel(IAppViewModel::class.java),
+        ViewModels.get(IAppViewModel::class.java),
 ) {
     val appSelectedScreenIndexState by appViewModel.selectedScreenIndexState.collectAsState()
     DisposableEffect(appSelectedScreenIndexState) {

@@ -3,7 +3,7 @@ package com.example.myapplication.viewmodel
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.example.myapplication.domain.IDataRepository
+import com.example.myapplication.domain.IServerDataRepository
 import com.example.myapplication.domain.RequestResult
 import com.example.myapplication.validators.EmailValidator
 import kotlinx.coroutines.*
@@ -28,7 +28,7 @@ abstract class IResetPasswordPageViewModel: IViewModel() {
 }
 
 class ResetPasswordPageViewModel(
-    private val dataRepository: IDataRepository,
+    private val dataRepository: IServerDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
 ): IResetPasswordPageViewModel() {
 

@@ -1,6 +1,6 @@
 package com.example.myapplication.viewmodel
 
-import com.example.myapplication.domain.IUserPreferencesRepository
+import com.example.myapplication.domain.IUserDataRepository
 import com.example.myapplication.models.User
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -25,7 +25,7 @@ abstract class IAppViewModel: IViewModel(){
 }
 
 class AppViewModel(
-    private val prefsRepository: IUserPreferencesRepository,
+    private val prefsRepository: IUserDataRepository,
 ): IAppViewModel() {
 
     private val _selectedScreenIndexState = MutableStateFlow(AppScreen.INIT_DATA)

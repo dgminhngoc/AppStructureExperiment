@@ -1,5 +1,6 @@
 package com.example.myapplication.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,17 +9,19 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.viewmodel.*
-import localProvider
 
 @Composable
 fun RegisterPage(
     registrationPageViewModel: IRegistrationPageViewModel =
-        localProvider.current.getViewModel(IRegistrationPageViewModel::class.java),
+        ViewModels.get(IRegistrationPageViewModel::class.java),
     loginScreenViewModel: ILoginScreenViewModel =
-        localProvider.current.getViewModel(ILoginScreenViewModel::class.java)
+        ViewModels.get(ILoginScreenViewModel::class.java)
 ) {
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {
@@ -264,6 +267,11 @@ fun RegisterSuccessPage(
                     end = 30.dp,
                 )
         ) {
+            Image(
+                painter = painterResource(id = android.R.drawable.ic_dialog_email),
+                colorFilter = ColorFilter.tint(color = MaterialTheme.colors.primary),
+                contentDescription = ""
+            )
             Text(text = "Registration is successful")
 
             Button(

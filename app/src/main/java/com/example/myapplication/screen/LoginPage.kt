@@ -13,17 +13,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.viewmodel.*
-import localProvider
 
 @Composable
 fun LoginPage(
     loginPageViewModel: ILoginPageViewModel =
-        localProvider.current.getViewModel(ILoginPageViewModel::class.java),
+        ViewModels.get(ILoginPageViewModel::class.java),
     loginScreenViewModel: ILoginScreenViewModel =
-        localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
+        ViewModels.get(ILoginScreenViewModel::class.java),
     appViewModel: IAppViewModel =
-        localProvider.current.getViewModel(IAppViewModel::class.java),
+        ViewModels.get(IAppViewModel::class.java),
 ) {
 
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()

@@ -1,19 +1,18 @@
-import androidx.compose.runtime.compositionLocalOf
-import com.example.myapplication.domain.DataRepository
-import com.example.myapplication.domain.IDataRepository
-import com.example.myapplication.domain.IUserPreferencesRepository
-import com.example.myapplication.domain.UserPreferencesRepository
+package com.example.myapplication.providers
+
+import com.example.myapplication.domain.ServerDataRepository
+import com.example.myapplication.domain.IServerDataRepository
+import com.example.myapplication.domain.IUserDataRepository
+import com.example.myapplication.domain.UserDataRepository
 import com.example.myapplication.viewmodel.*
 
-val localProvider = compositionLocalOf<IProvider> { error("Provider not set") }
-
-interface IProvider {
+interface IViewModelProvider {
     fun <T: IViewModel> getViewModel(vmClass: Class<T>): T
-    fun getDataRepository(): IDataRepository
-    fun getUserReferencesRepository(): IUserPreferencesRepository
+    fun getDataRepository(): IServerDataRepository
+    fun getUserReferencesRepository(): IUserDataRepository
 }
 
-class Provider: IProvider {
+class ViewModelProvider: IViewModelProvider {
     private val viewModels = mutableMapOf<String, IViewModel>()
 
     @Suppress("UNCHECKED_CAST")
@@ -100,12 +99,12 @@ class Provider: IProvider {
         return viewModel as T
     }
 
-    override fun getDataRepository(): IDataRepository {
-        return DataRepository()
+    override fun getDataRepository(): IServerDataRepository {
+        return ServerDataRepository()
     }
 
-    override fun getUserReferencesRepository(): IUserPreferencesRepository {
-        return UserPreferencesRepository()
+    override fun getUserReferencesRepository(): IUserDataRepository {
+        return UserDataRepository()
     }
 
     private fun <T: IViewModel> removeViewModel(vmClass: Class<T>) {

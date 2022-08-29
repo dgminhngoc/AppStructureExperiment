@@ -7,7 +7,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 
-interface IDataRepository {
+interface IServerDataRepository {
     suspend fun fetchNews() : RequestResult<List<News>>
     suspend fun fetchVideos(videoId: String) : RequestResult<List<Video>>
     suspend fun authenticate(email: String, password: String): RequestResult<User>
@@ -18,7 +18,7 @@ interface IDataRepository {
     suspend fun refreshAccessToken(user: User): RequestResult<User>
 }
 
-class DataRepository: IDataRepository {
+class ServerDataRepository: IServerDataRepository {
     companion object{
         private const val SERVER_URL = "https://example.com"
         private const val API_LOGIN = "/api/login"
@@ -219,46 +219,49 @@ class DataRepository: IDataRepository {
         var errorCode: Int? = null
         var exception: Exception? = null
 
-        try {
-            val response = HttpClient().post("$SERVER_URL$API_REGISTER"){
-                headers {
-                    append(
-                        name = "Content-Type",
-                        value = "application/json"
-                    )
-                    append(
-                        name = "Accept-Version",
-                        value = "1.0.0"
-                    )
-                }
-                setBody(
-                    body = JsonObject().apply {
-                        addProperty("firstName", firstName)
-                        addProperty("lastName", lastName)
-                        addProperty("email", email)
-                        addProperty("password", password)
-                        addProperty("authority", authority)
-                    }.asString
-                )
-            }
+//        try {
+//            val response = HttpClient().post("$SERVER_URL$API_REGISTER"){
+//                headers {
+//                    append(
+//                        name = "Content-Type",
+//                        value = "application/json"
+//                    )
+//                    append(
+//                        name = "Accept-Version",
+//                        value = "1.0.0"
+//                    )
+//                }
+//                setBody(
+//                    body = JsonObject().apply {
+//                        addProperty("firstName", firstName)
+//                        addProperty("lastName", lastName)
+//                        addProperty("email", email)
+//                        addProperty("password", password)
+//                        addProperty("authority", authority)
+//                    }.asString
+//                )
+//            }
+//
+//            when(response.status) {
+//                HttpStatusCode.OK -> {
+//                    return RequestResult.OnSuccess(data = response.body<String?>().toString())
+//                }
+//                else -> {
+//                    errorCode = response.status.value
+//                }
+//            }
+//        }
+//        catch (e: Exception) {
+//            exception = e
+//        }
 
-            when(response.status) {
-                HttpStatusCode.OK -> {
-                    return RequestResult.OnSuccess(data = response.body<String?>().toString())
-                }
-                else -> {
-                    errorCode = response.status.value
-                }
-            }
-        }
-        catch (e: Exception) {
-            exception = e
-        }
+        return RequestResult.OnSuccess(data = "")
 
-        return RequestResult.OnError(
-            errorCode = errorCode,
-            exception = exception,
-        )
+
+//        return RequestResult.OnError(
+//            errorCode = errorCode,
+//            exception = exception,
+//        )
     }
 
     override suspend fun refreshAccessToken(user: User): RequestResult<User> {

@@ -1,7 +1,7 @@
 package com.example.myapplication.viewmodel
 
 import android.util.Log
-import com.example.myapplication.domain.IDataRepository
+import com.example.myapplication.domain.IServerDataRepository
 import com.example.myapplication.domain.RequestResult
 import com.example.myapplication.models.User
 import com.example.myapplication.validators.EmailValidator
@@ -37,7 +37,7 @@ abstract class ILoginPageViewModel: IViewModel() {
 }
 
 class LoginPageViewModel(
-    private val dataRepository: IDataRepository,
+    private val dataRepository: IServerDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
     private val passwordValidator: PasswordValidator = PasswordValidator(),
 ): ILoginPageViewModel() {

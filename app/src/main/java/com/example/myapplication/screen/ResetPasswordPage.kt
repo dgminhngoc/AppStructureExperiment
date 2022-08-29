@@ -8,15 +8,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.viewmodel.*
-import localProvider
 
 @Composable
 fun ResetPasswordPage(
     resetPasswordPageViewModel: IResetPasswordPageViewModel =
-        localProvider.current.getViewModel(IResetPasswordPageViewModel::class.java),
+        ViewModels.get(IResetPasswordPageViewModel::class.java),
     loginScreenViewModel: ILoginScreenViewModel =
-        localProvider.current.getViewModel(ILoginScreenViewModel::class.java),
+        ViewModels.get(ILoginScreenViewModel::class.java),
 ) {
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {
