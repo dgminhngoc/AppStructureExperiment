@@ -13,9 +13,9 @@ import com.example.myapplication.viewmodel.IProductsPageViewModel
 @Composable
 fun ProductsPage(
     productsPageViewModel: IProductsPageViewModel =
-        ViewModels.get(IProductsPageViewModel::class.java),
+        ViewModels.get(IProductsPageViewModel::class.java.name),
     mainScreenViewModel: IMainScreenViewModel =
-        ViewModels.get(IMainScreenViewModel::class.java),
+        ViewModels.get(IMainScreenViewModel::class.java.name),
 ) {
     val mainScreenSelectedTabIndexState by mainScreenViewModel.selectedTabIndexState.collectAsState()
     DisposableEffect(mainScreenSelectedTabIndexState) {

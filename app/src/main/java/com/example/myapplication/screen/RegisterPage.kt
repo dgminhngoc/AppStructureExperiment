@@ -19,9 +19,9 @@ import com.example.myapplication.viewmodel.*
 @Composable
 fun RegisterPage(
     registrationPageViewModel: IRegistrationPageViewModel =
-        ViewModels.get(IRegistrationPageViewModel::class.java),
+        ViewModels.get(IRegistrationPageViewModel::class.java.name),
     loginScreenViewModel: ILoginScreenViewModel =
-        ViewModels.get(ILoginScreenViewModel::class.java)
+        ViewModels.get(ILoginScreenViewModel::class.java.name)
 ) {
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {

@@ -8,7 +8,7 @@ import com.example.myapplication.viewmodel.IAppViewModel
 
 @Composable
 fun App(
-    appViewModel: IAppViewModel = ViewModels.get(IAppViewModel::class.java)
+    appViewModel: IAppViewModel = ViewModels.get(IAppViewModel::class.java.name)
 ) {
     when(appViewModel.selectedScreenIndexState.collectAsState().value) {
         AppScreen.INIT_DATA -> {

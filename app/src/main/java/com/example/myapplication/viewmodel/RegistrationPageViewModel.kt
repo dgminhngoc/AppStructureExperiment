@@ -69,7 +69,6 @@ class RegistrationPageViewModel(
 
     init {
         Log.d("TEST", "RegisterPageViewModel init")
-
     }
 
     override fun onEvent(event: RegistrationFormEvent) {

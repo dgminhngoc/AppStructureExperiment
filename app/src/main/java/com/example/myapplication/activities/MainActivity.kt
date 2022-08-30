@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import com.example.myapplication.screen.App
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.providers.Provider
-import com.example.myapplication.screen.AppTest
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,7 +13,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                AppTest()
+                Provider {
+                    App()
+                }
             }
         }
     }

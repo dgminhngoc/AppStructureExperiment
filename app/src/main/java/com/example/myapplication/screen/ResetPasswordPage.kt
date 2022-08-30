@@ -14,9 +14,9 @@ import com.example.myapplication.viewmodel.*
 @Composable
 fun ResetPasswordPage(
     resetPasswordPageViewModel: IResetPasswordPageViewModel =
-        ViewModels.get(IResetPasswordPageViewModel::class.java),
+        ViewModels.get(IResetPasswordPageViewModel::class.java.name),
     loginScreenViewModel: ILoginScreenViewModel =
-        ViewModels.get(ILoginScreenViewModel::class.java),
+        ViewModels.get(ILoginScreenViewModel::class.java.name),
 ) {
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {
@@ -27,7 +27,7 @@ fun ResetPasswordPage(
         }
     }
 
-    if(!resetPasswordPageViewModel.resetPasswordSubmittedState.value) {
+    if(!resetPasswordPageViewModel.resetPasswordSubmittedState.collectAsState().value) {
         ResetPasswordFormPage(
             resetPasswordPageViewModel = resetPasswordPageViewModel,
             loginScreenViewModel = loginScreenViewModel
@@ -45,7 +45,8 @@ fun ResetPasswordFormPage(
     resetPasswordPageViewModel: IResetPasswordPageViewModel,
     loginScreenViewModel: ILoginScreenViewModel
 ) {
-    var email = resetPasswordPageViewModel.resetPasswordFormState.value.email
+    val resetPasswordFormState by resetPasswordPageViewModel.resetPasswordFormState.collectAsState()
+    var email = resetPasswordFormState.email
 
     Box {
         Column(
@@ -71,7 +72,7 @@ fun ResetPasswordFormPage(
                             email = email,
                         ))
                 },
-                isError = resetPasswordPageViewModel.resetPasswordFormState.value.emailError != null,
+                isError = resetPasswordFormState.emailError != null,
                 label = { Text("E-Mail") }
             )
 

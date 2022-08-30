@@ -27,7 +27,7 @@ fun Provider(
 object ViewModels {
     @Composable
     @ReadOnlyComposable
-    fun <T: IViewModel> get(vmClass: Class<T>): T {
-        return LocalViewModelProvider.current.getViewModel(vmClass)
+    fun <T: IViewModel> get(key: String): T {
+        return LocalViewModelProvider.current.getViewModel(key)
     }
 }

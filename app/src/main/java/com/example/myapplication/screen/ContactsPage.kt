@@ -13,9 +13,9 @@ import com.example.myapplication.viewmodel.IMainScreenViewModel
 @Composable
 fun ContactsPage(
     contactsPageViewModel: IContactsPageViewModel =
-        ViewModels.get(IContactsPageViewModel::class.java),
+        ViewModels.get(IContactsPageViewModel::class.java.name),
     mainScreenViewModel: IMainScreenViewModel =
-        ViewModels.get(IMainScreenViewModel::class.java),
+        ViewModels.get(IMainScreenViewModel::class.java.name),
 ) {
     val mainScreenSelectedTabIndexState by mainScreenViewModel.selectedTabIndexState.collectAsState()
     DisposableEffect(mainScreenSelectedTabIndexState) {

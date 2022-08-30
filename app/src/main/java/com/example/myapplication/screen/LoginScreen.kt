@@ -8,9 +8,9 @@ import com.example.myapplication.viewmodel.*
 @Composable
 fun LoginScreen(
     loginScreenViewModel: ILoginScreenViewModel =
-        ViewModels.get(ILoginScreenViewModel::class.java),
+        ViewModels.get(ILoginScreenViewModel::class.java.name),
     appViewModel: IAppViewModel =
-        ViewModels.get(IAppViewModel::class.java),
+        ViewModels.get(IAppViewModel::class.java.name),
 ) {
     val appSelectedScreenIndexState by appViewModel.selectedScreenIndexState.collectAsState()
     DisposableEffect(appSelectedScreenIndexState) {
