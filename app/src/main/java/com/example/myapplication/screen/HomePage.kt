@@ -21,7 +21,7 @@ fun HomePage(
     DisposableEffect(mainScreenSelectedTabIndexState) {
         onDispose {
             if(mainScreenSelectedTabIndexState != BottomNavTab.HOME) {
-                homePageViewModel.onCleared()
+                homePageViewModel.dispose()
             }
         }
     }

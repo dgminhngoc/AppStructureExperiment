@@ -21,7 +21,7 @@ fun VideosPage(
     DisposableEffect(mainScreenSelectedTabIndexState) {
         onDispose {
             if(mainScreenSelectedTabIndexState != BottomNavTab.VIDEOS) {
-                videosPageViewModel.onCleared()
+                videosPageViewModel.dispose()
             }
         }
     }

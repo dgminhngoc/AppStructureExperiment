@@ -30,7 +30,7 @@ fun LoginPage(
     DisposableEffect(loginSelectedPageIndexState) {
         onDispose {
             if(loginSelectedPageIndexState != LoginNavigatePage.LOGIN) {
-                loginPageViewModel.onCleared()
+                loginPageViewModel.dispose()
             }
         }
     }

@@ -27,7 +27,7 @@ fun RegisterPage(
     DisposableEffect(loginSelectedPageIndexState) {
         onDispose {
             if(loginSelectedPageIndexState != LoginNavigatePage.REGISTER) {
-                registrationPageViewModel.onCleared()
+                registrationPageViewModel.dispose()
             }
         }
     }

@@ -22,7 +22,7 @@ fun MainScreen(
     DisposableEffect(appSelectedScreenIndexState) {
         onDispose {
             if(appSelectedScreenIndexState != AppScreen.MAIN) {
-                mainScreenViewModel.onCleared()
+                mainScreenViewModel.dispose()
             }
         }
     }

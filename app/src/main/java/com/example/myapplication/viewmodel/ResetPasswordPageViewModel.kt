@@ -21,16 +21,17 @@ data class ResetPasswordFormState(
     val emailError: String? = null,
 )
 
-abstract class IResetPasswordPageViewModel: IViewModel() {
-    abstract val resetPasswordFormState: MutableState<ResetPasswordFormState>
-    abstract val resetPasswordSubmittedState: MutableState<Boolean>
-    abstract fun onEvent(event: ResetPasswordFormEvent)
+interface IResetPasswordPageViewModel: IViewModel {
+    val resetPasswordFormState: MutableState<ResetPasswordFormState>
+    val resetPasswordSubmittedState: MutableState<Boolean>
+    fun onEvent(event: ResetPasswordFormEvent)
 }
 
 class ResetPasswordPageViewModel(
     private val dataRepository: IServerDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
-): IResetPasswordPageViewModel() {
+    onDisposeAction: (() -> Unit)? = null
+): IResetPasswordPageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
 
     override val resetPasswordFormState = mutableStateOf(ResetPasswordFormState())
     override val resetPasswordSubmittedState = mutableStateOf(false)
@@ -85,8 +86,8 @@ class ResetPasswordPageViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    override fun dispose() {
+        super.dispose()
 
         resetPasswordJob?.cancel()
         Log.d("TEST", "RegisterPageViewModel dispose")

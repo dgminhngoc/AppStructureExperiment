@@ -30,17 +30,18 @@ data class LoginFormSubmittedState(
     val user: User? = null,
 )
 
-abstract class ILoginPageViewModel: IViewModel() {
-    abstract val loginFormState: StateFlow<LoginFormState>
-    abstract val loginFormSubmittedState: StateFlow<LoginFormSubmittedState>
-    abstract fun onEvent(event: LoginFormEvent)
+interface ILoginPageViewModel: IViewModel {
+    val loginFormState: StateFlow<LoginFormState>
+    val loginFormSubmittedState: StateFlow<LoginFormSubmittedState>
+    fun onEvent(event: LoginFormEvent)
 }
 
 class LoginPageViewModel(
     private val dataRepository: IServerDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
     private val passwordValidator: PasswordValidator = PasswordValidator(),
-): ILoginPageViewModel() {
+    onDisposeAction: (() -> Unit)? = null
+): ILoginPageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
 
     private val _loginFormState = MutableStateFlow(LoginFormState())
     override val loginFormState = _loginFormState.map { it }.stateIn(
@@ -115,8 +116,8 @@ class LoginPageViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    override fun dispose() {
+        super.dispose()
 
         loginJob?.cancel()
         loginJob = null

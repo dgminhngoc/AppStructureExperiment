@@ -16,7 +16,7 @@ fun LoginScreen(
     DisposableEffect(appSelectedScreenIndexState) {
         onDispose {
             if(appSelectedScreenIndexState != AppScreen.LOGIN) {
-                loginScreenViewModel.onCleared()
+                loginScreenViewModel.dispose()
             }
         }
     }

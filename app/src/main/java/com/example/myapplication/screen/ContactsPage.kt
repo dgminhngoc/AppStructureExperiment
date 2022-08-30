@@ -21,10 +21,9 @@ fun ContactsPage(
     DisposableEffect(mainScreenSelectedTabIndexState) {
         onDispose {
             if(mainScreenSelectedTabIndexState != BottomNavTab.CONTACTS) {
-                contactsPageViewModel.onCleared()
+                contactsPageViewModel.dispose()
             }
         }
     }
-
     Text(text = "Contact Screen")
 }

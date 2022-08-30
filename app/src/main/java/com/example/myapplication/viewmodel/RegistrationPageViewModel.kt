@@ -36,10 +36,10 @@ data class RegistrationFormState(
     val isTermsAcceptedError: String? = null,
 )
 
-abstract class IRegistrationPageViewModel: IViewModel() {
-    abstract val registrationFormState: MutableState<RegistrationFormState>
-    abstract val registrationSubmittedState: MutableState<Boolean>
-    abstract fun onEvent(event: RegistrationFormEvent)
+interface IRegistrationPageViewModel: IViewModel {
+    val registrationFormState: MutableState<RegistrationFormState>
+    val registrationSubmittedState: MutableState<Boolean>
+    fun onEvent(event: RegistrationFormEvent)
 }
 
 class RegistrationPageViewModel(
@@ -49,7 +49,8 @@ class RegistrationPageViewModel(
     private val repeatedPasswordValidator: RepeatedPasswordValidator = RepeatedPasswordValidator(),
     private val nameValidator: NameValidator = NameValidator(),
     private val termsValidator: TermsValidator = TermsValidator(),
-): IRegistrationPageViewModel() {
+    onDisposeAction: (() -> Unit)? = null
+): IRegistrationPageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
 
     override val registrationFormState = mutableStateOf(RegistrationFormState())
     override val registrationSubmittedState = mutableStateOf(false)
@@ -136,8 +137,8 @@ class RegistrationPageViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    override fun dispose() {
+        super.dispose()
 
         registrationJob?.cancel()
         Log.d("TEST", "RegisterPageViewModel dispose")

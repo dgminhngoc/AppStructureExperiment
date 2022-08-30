@@ -8,8 +8,6 @@ import com.example.myapplication.viewmodel.*
 
 interface IViewModelProvider {
     fun <T: IViewModel> getViewModel(vmClass: Class<T>): T
-    fun getDataRepository(): IServerDataRepository
-    fun getUserReferencesRepository(): IUserDataRepository
 }
 
 class ViewModelProvider: IViewModelProvider {
@@ -26,70 +24,73 @@ class ViewModelProvider: IViewModelProvider {
                     AppViewModel(getUserReferencesRepository())
                 }
                 ILoginScreenViewModel::class.java.name -> {
-                    LoginScreenViewModel().also {
-                        it.setOnClearedAction {
+                    LoginScreenViewModel(
+                        onDisposeAction = {
                             removeViewModel(ILoginScreenViewModel::class.java)
                         }
-                    }
+                    )
                 }
                 IMainScreenViewModel::class.java.name -> {
-                    MainScreenViewModel().also {
-                        it.setOnClearedAction {
+                    MainScreenViewModel(
+                        onDisposeAction = {
                             removeViewModel(IMainScreenViewModel::class.java)
                         }
-                    }
+                    )
                 }
                 ILoginPageViewModel::class.java.name -> {
-                    LoginPageViewModel(getDataRepository()).also {
-                        it.setOnClearedAction {
+                    LoginPageViewModel(
+                        dataRepository = getDataRepository(),
+                        onDisposeAction = {
                             removeViewModel(ILoginPageViewModel::class.java)
                         }
-                    }
+                    )
                 }
                 IRegistrationPageViewModel::class.java.name -> {
-                    RegistrationPageViewModel(getDataRepository()).also {
-                        it.setOnClearedAction {
+                    RegistrationPageViewModel(
+                        getDataRepository(),
+                        onDisposeAction = {
                             removeViewModel(IRegistrationPageViewModel::class.java)
                         }
-                    }
+                    )
                 }
                 IResetPasswordPageViewModel::class.java.name -> {
-                    ResetPasswordPageViewModel(getDataRepository()).also {
-                        it.setOnClearedAction {
+                    ResetPasswordPageViewModel(
+                        getDataRepository(),
+                        onDisposeAction = {
                             removeViewModel(IResetPasswordPageViewModel::class.java)
                         }
-                    }
+                    )
                 }
                 IHomePageViewModel::class.java.name -> {
-                    HomePageViewModel().also {
-                        it.setOnClearedAction {
+                    HomePageViewModel(
+                        onDisposeAction = {
                             removeViewModel(IHomePageViewModel::class.java)
                         }
-                    }
+                    )
                 }
                 IVideosPageViewModel::class.java.name -> {
-                    VideosPageViewModel().also {
-                        it.setOnClearedAction {
+                    VideosPageViewModel(
+                        onDisposeAction = {
                             removeViewModel(IVideosPageViewModel::class.java)
                         }
-                    }
+                    )
                 }
                 IProductsPageViewModel::class.java.name -> {
-                    ProductsPageViewModel().also {
-                        it.setOnClearedAction {
+                    ProductsPageViewModel(
+                        onDisposeAction = {
                             removeViewModel(IProductsPageViewModel::class.java)
                         }
-                    }
+                    )
                 }
                 IContactsPageViewModel::class.java.name -> {
-                    ContactsPageViewModel().also {
-                        it.setOnClearedAction {
+                    ContactsPageViewModel(
+                        onDisposeAction = {
                             removeViewModel(IContactsPageViewModel::class.java)
                         }
-                    }
+                    )
                 }
                 else -> {
-                    object: IViewModel(){}
+                    object: BaseViewModel(){}
                 }
             }
 
@@ -99,11 +100,11 @@ class ViewModelProvider: IViewModelProvider {
         return viewModel as T
     }
 
-    override fun getDataRepository(): IServerDataRepository {
+    private fun getDataRepository(): IServerDataRepository {
         return ServerDataRepository()
     }
 
-    override fun getUserReferencesRepository(): IUserDataRepository {
+    private fun getUserReferencesRepository(): IUserDataRepository {
         return UserDataRepository()
     }
 

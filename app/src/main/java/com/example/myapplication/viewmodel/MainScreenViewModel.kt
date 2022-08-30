@@ -17,12 +17,14 @@ sealed class MainScreenEvent {
     ): MainScreenEvent()
 }
 
-abstract class IMainScreenViewModel: IViewModel() {
-    abstract val selectedTabIndexState: StateFlow<BottomNavTab>
-    abstract fun onEvent(event: MainScreenEvent)
+interface IMainScreenViewModel: IViewModel {
+    val selectedTabIndexState: StateFlow<BottomNavTab>
+    fun onEvent(event: MainScreenEvent)
 }
 
-class MainScreenViewModel: IMainScreenViewModel() {
+class MainScreenViewModel(
+    onDisposeAction: (() -> Unit)? = null
+): IMainScreenViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
     private val _selectedTabIndexState = MutableStateFlow(BottomNavTab.HOME)
     override val selectedTabIndexState= _selectedTabIndexState.map { it }.stateIn(
         CoroutineScope(Dispatchers.Main),

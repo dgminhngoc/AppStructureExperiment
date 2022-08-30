@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
+import com.example.myapplication.viewmodel.BaseViewModel
 import com.example.myapplication.viewmodel.IViewModel
 
 val LocalViewModelProvider = compositionLocalOf<IViewModelProvider> { error("com.example.myapplication.providers.IViewModelProvider not set") }

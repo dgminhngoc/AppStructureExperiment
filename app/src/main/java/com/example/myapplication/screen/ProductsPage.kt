@@ -21,7 +21,7 @@ fun ProductsPage(
     DisposableEffect(mainScreenSelectedTabIndexState) {
         onDispose {
             if(mainScreenSelectedTabIndexState != BottomNavTab.PRODUCTS) {
-                productsPageViewModel.onCleared()
+                productsPageViewModel.dispose()
             }
         }
     }

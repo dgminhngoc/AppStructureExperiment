@@ -1,9 +1,11 @@
 package com.example.myapplication.viewmodel
 
-abstract class IHomePageViewModel: IViewModel() {
+interface IHomePageViewModel: IViewModel {
 
 }
 
-class HomePageViewModel: IHomePageViewModel() {
+class HomePageViewModel(
+    onDisposeAction: (() -> Unit)? = null
+): IHomePageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
 
 }

@@ -22,7 +22,7 @@ fun ResetPasswordPage(
     DisposableEffect(loginSelectedPageIndexState) {
         onDispose {
             if(loginSelectedPageIndexState != LoginNavigatePage.RESET_PASSWORD) {
-                resetPasswordPageViewModel.onCleared()
+                resetPasswordPageViewModel.dispose()
             }
         }
     }
