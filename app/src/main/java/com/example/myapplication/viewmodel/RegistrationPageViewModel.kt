@@ -1,12 +1,11 @@
 package com.example.myapplication.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.example.myapplication.domain.IServerDataRepository
 import com.example.myapplication.domain.RequestResult
 import com.example.myapplication.validators.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
 sealed class RegistrationFormEvent {
     data class RegistrationFormChanged(
@@ -37,8 +36,8 @@ data class RegistrationFormState(
 )
 
 interface IRegistrationPageViewModel: IViewModel {
-    val registrationFormState: MutableState<RegistrationFormState>
-    val registrationSubmittedState: MutableState<Boolean>
+    val registrationFormState: StateFlow<RegistrationFormState>
+    val registrationSubmittedState: StateFlow<Boolean>
     fun onEvent(event: RegistrationFormEvent)
 }
 
@@ -52,8 +51,18 @@ class RegistrationPageViewModel(
     onDisposeAction: (() -> Unit)? = null
 ): IRegistrationPageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
 
-    override val registrationFormState = mutableStateOf(RegistrationFormState())
-    override val registrationSubmittedState = mutableStateOf(false)
+    private val _registrationFormState = MutableStateFlow(RegistrationFormState())
+    override val registrationFormState = _registrationFormState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _registrationFormState.value
+    )
+    private val _registrationSubmittedState = MutableStateFlow(false)
+    override val registrationSubmittedState = _registrationSubmittedState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _registrationSubmittedState.value
+    )
 
     private var registrationJob: Job? = null
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
@@ -66,7 +75,7 @@ class RegistrationPageViewModel(
     override fun onEvent(event: RegistrationFormEvent) {
         when(event) {
             is RegistrationFormEvent.RegistrationFormChanged -> {
-                registrationFormState.value = RegistrationFormState(
+                _registrationFormState.value = RegistrationFormState(
                     email = event.email,
                     password = event.password,
                     repeatedPassword = event.repeatedPassword,
@@ -104,14 +113,16 @@ class RegistrationPageViewModel(
         }
 
         if(hasError) {
-            registrationFormState.value = registrationFormState.value.copy(
-                emailError = emailValidationResult.errorMessage,
-                passwordError = passwordValidationResult.errorMessage,
-                repeatedPasswordError = repeatedPasswordValidationResult.errorMessage,
-                firstNameError = firstNameValidationResult.errorMessage,
-                lastnameError = lastNameValidationResult.errorMessage,
-                isTermsAcceptedError = termsValidationResult.errorMessage,
-            )
+            _registrationFormState.update { previousState->
+                previousState.copy(
+                    emailError = emailValidationResult.errorMessage,
+                    passwordError = passwordValidationResult.errorMessage,
+                    repeatedPasswordError = repeatedPasswordValidationResult.errorMessage,
+                    firstNameError = firstNameValidationResult.errorMessage,
+                    lastnameError = lastNameValidationResult.errorMessage,
+                    isTermsAcceptedError = termsValidationResult.errorMessage,
+                )
+            }
 
             return
         }
@@ -126,12 +137,12 @@ class RegistrationPageViewModel(
             )){
                 is RequestResult.OnSuccess -> {
                     result.data?.let {
-                        registrationSubmittedState.value = true
+                        _registrationSubmittedState.value = true
                     }
 
                 }
                 is RequestResult.OnError -> {
-                    registrationSubmittedState.value = false
+                    _registrationSubmittedState.value = false
                 }
             }
         }

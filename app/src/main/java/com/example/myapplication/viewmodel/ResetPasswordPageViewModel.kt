@@ -1,12 +1,11 @@
 package com.example.myapplication.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.example.myapplication.domain.IServerDataRepository
 import com.example.myapplication.domain.RequestResult
 import com.example.myapplication.validators.EmailValidator
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
 sealed class ResetPasswordFormEvent {
     data class ResetPasswordFormChanged(
@@ -22,8 +21,8 @@ data class ResetPasswordFormState(
 )
 
 interface IResetPasswordPageViewModel: IViewModel {
-    val resetPasswordFormState: MutableState<ResetPasswordFormState>
-    val resetPasswordSubmittedState: MutableState<Boolean>
+    val resetPasswordFormState: StateFlow<ResetPasswordFormState>
+    val resetPasswordSubmittedState: StateFlow<Boolean>
     fun onEvent(event: ResetPasswordFormEvent)
 }
 
@@ -33,8 +32,18 @@ class ResetPasswordPageViewModel(
     onDisposeAction: (() -> Unit)? = null
 ): IResetPasswordPageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
 
-    override val resetPasswordFormState = mutableStateOf(ResetPasswordFormState())
-    override val resetPasswordSubmittedState = mutableStateOf(false)
+    private val _resetPasswordFormState = MutableStateFlow(ResetPasswordFormState())
+    override val resetPasswordFormState = _resetPasswordFormState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _resetPasswordFormState.value
+    )
+    private val _resetPasswordSubmittedState = MutableStateFlow(false)
+    override val resetPasswordSubmittedState = _resetPasswordSubmittedState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _resetPasswordSubmittedState.value
+    )
 
     private var resetPasswordJob: Job? = null
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
@@ -42,7 +51,7 @@ class ResetPasswordPageViewModel(
     override fun onEvent(event: ResetPasswordFormEvent) {
         when(event) {
             is ResetPasswordFormEvent.ResetPasswordFormChanged -> {
-                resetPasswordFormState.value = ResetPasswordFormState(
+                _resetPasswordFormState.value = ResetPasswordFormState(
                     email = event.email,
                 )
             }
@@ -62,9 +71,11 @@ class ResetPasswordPageViewModel(
         }
 
         if(hasError) {
-            resetPasswordFormState.value = resetPasswordFormState.value.copy(
-                emailError = emailValidationResult.errorMessage,
-            )
+            _resetPasswordFormState.update{ previousState->
+                previousState.copy(
+                    emailError = emailValidationResult.errorMessage,
+                )
+            }
 
             return
         }
@@ -75,12 +86,12 @@ class ResetPasswordPageViewModel(
             )){
                 is RequestResult.OnSuccess -> {
                     result.data?.let {
-                        resetPasswordSubmittedState.value = true
+                        _resetPasswordSubmittedState.value = true
                     }
 
                 }
                 is RequestResult.OnError -> {
-                    resetPasswordSubmittedState.value = false
+                    _resetPasswordSubmittedState.value = false
                 }
             }
         }

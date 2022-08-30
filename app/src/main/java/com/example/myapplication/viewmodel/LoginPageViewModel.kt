@@ -85,10 +85,12 @@ class LoginPageViewModel(
         }
 
         if(hasError) {
-            _loginFormState.value = _loginFormState.value.copy(
-                emailError = emailValidationResult.errorMessage,
-                passwordError = passwordValidationResult.errorMessage,
-            )
+            _loginFormState.update { previousState->
+                previousState.copy(
+                    emailError = emailValidationResult.errorMessage,
+                    passwordError = passwordValidationResult.errorMessage,
+                )
+            }
 
             return
         }

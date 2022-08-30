@@ -32,7 +32,7 @@ fun RegisterPage(
         }
     }
 
-    if(!registrationPageViewModel.registrationSubmittedState.value) {
+    if(!registrationPageViewModel.registrationSubmittedState.collectAsState().value) {
         RegisterFormPage(
             registrationPageViewModel = registrationPageViewModel,
             loginScreenViewModel = loginScreenViewModel
@@ -50,12 +50,13 @@ fun RegisterFormPage(
     registrationPageViewModel: IRegistrationPageViewModel,
     loginScreenViewModel: ILoginScreenViewModel
 ) {
-    var email = registrationPageViewModel.registrationFormState.value.email
-    var password = registrationPageViewModel.registrationFormState.value.password
-    var repeatedPassword = registrationPageViewModel.registrationFormState.value.repeatedPassword
-    var firstName = registrationPageViewModel.registrationFormState.value.firstName
-    var lastName = registrationPageViewModel.registrationFormState.value.lastname
-    var isTermsAccepted = registrationPageViewModel.registrationFormState.value.isTermsAccepted
+    val registrationFormState by registrationPageViewModel.registrationFormState.collectAsState()
+    var email = registrationFormState.email
+    var password = registrationFormState.password
+    var repeatedPassword = registrationFormState.repeatedPassword
+    var firstName = registrationFormState.firstName
+    var lastName = registrationFormState.lastname
+    var isTermsAccepted = registrationFormState.isTermsAccepted
 
     Box {
         Column(
@@ -86,10 +87,10 @@ fun RegisterFormPage(
                         isTermsAccepted = isTermsAccepted,
                     ))
                 },
-                isError = registrationPageViewModel.registrationFormState.value.emailError != null,
+                isError = registrationFormState.emailError != null,
                 label = { Text("E-Mail") }
             )
-            registrationPageViewModel.registrationFormState.value.emailError?.let {
+            registrationFormState.emailError?.let {
                 Text(
                     text = it,
                     color = MaterialTheme.colors.error,
@@ -113,10 +114,10 @@ fun RegisterFormPage(
                         isTermsAccepted = isTermsAccepted,
                     ))
                 },
-                isError = registrationPageViewModel.registrationFormState.value.passwordError != null,
+                isError = registrationFormState.passwordError != null,
                 label = { Text("Password") }
             )
-            registrationPageViewModel.registrationFormState.value.passwordError?.let {
+            registrationFormState.passwordError?.let {
                 Text(
                     text = it,
                     color = MaterialTheme.colors.error,
@@ -140,10 +141,10 @@ fun RegisterFormPage(
                         isTermsAccepted = isTermsAccepted,
                     ))
                 },
-                isError = registrationPageViewModel.registrationFormState.value.repeatedPasswordError != null,
+                isError = registrationFormState.repeatedPasswordError != null,
                 label = { Text("Repeat password") }
             )
-            registrationPageViewModel.registrationFormState.value.repeatedPasswordError?.let {
+            registrationFormState.repeatedPasswordError?.let {
                 Text(
                     text = it,
                     color = MaterialTheme.colors.error,
@@ -166,10 +167,10 @@ fun RegisterFormPage(
                         isTermsAccepted = isTermsAccepted,
                     ))
                 },
-                isError = registrationPageViewModel.registrationFormState.value.firstNameError != null,
+                isError = registrationFormState.firstNameError != null,
                 label = { Text("First Name") }
             )
-            registrationPageViewModel.registrationFormState.value.firstNameError?.let {
+            registrationFormState.firstNameError?.let {
                 Text(
                     text = it,
                     color = MaterialTheme.colors.error,
@@ -192,10 +193,10 @@ fun RegisterFormPage(
                         isTermsAccepted = isTermsAccepted,
                     ))
                 },
-                isError = registrationPageViewModel.registrationFormState.value.lastnameError != null,
+                isError = registrationFormState.lastnameError != null,
                 label = { Text("Last Name") }
             )
-            registrationPageViewModel.registrationFormState.value.lastnameError?.let {
+            registrationFormState.lastnameError?.let {
                 Text(
                     text = it,
                     color = MaterialTheme.colors.error,
@@ -222,7 +223,7 @@ fun RegisterFormPage(
                 )
                 Text(text = "Terms Accept", modifier = Modifier.padding(16.dp))
             }
-            registrationPageViewModel.registrationFormState.value.isTermsAcceptedError?.let {
+            registrationFormState.isTermsAcceptedError?.let {
                 Text(
                     text = it,
                     color = MaterialTheme.colors.error,
