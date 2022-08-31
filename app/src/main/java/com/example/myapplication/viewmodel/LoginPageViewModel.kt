@@ -74,8 +74,8 @@ class LoginPageViewModel(
     }
 
     private fun submitData() {
-        val emailValidationResult = emailValidator.execute(_loginFormState.value.email)
-        val passwordValidationResult = passwordValidator.execute(_loginFormState.value.password)
+        val emailValidationResult = emailValidator.validate(_loginFormState.value.email)
+        val passwordValidationResult = passwordValidator.validate(_loginFormState.value.password)
 
         val hasError = listOf(
             emailValidationResult,

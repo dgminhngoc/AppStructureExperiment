@@ -47,7 +47,7 @@ class RegistrationPageViewModel(
     private val passwordValidator: PasswordValidator = PasswordValidator(),
     private val repeatedPasswordValidator: RepeatedPasswordValidator = RepeatedPasswordValidator(),
     private val nameValidator: NameValidator = NameValidator(),
-    private val termsValidator: TermsValidator = TermsValidator(),
+    private val termsAcceptedValidator: TermsAcceptedValidator = TermsAcceptedValidator(),
     onDisposeAction: (() -> Unit)? = null
 ): IRegistrationPageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
 
@@ -90,15 +90,15 @@ class RegistrationPageViewModel(
     }
 
     private fun submitData() {
-        val emailValidationResult = emailValidator.execute(registrationFormState.value.email)
-        val passwordValidationResult = passwordValidator.execute(registrationFormState.value.password)
-        val repeatedPasswordValidationResult = repeatedPasswordValidator.execute(
+        val emailValidationResult = emailValidator.validate(registrationFormState.value.email)
+        val passwordValidationResult = passwordValidator.validate(registrationFormState.value.password)
+        val repeatedPasswordValidationResult = repeatedPasswordValidator.validate(
             registrationFormState.value.password,
             registrationFormState.value.repeatedPassword
         )
-        val firstNameValidationResult = nameValidator.execute(registrationFormState.value.firstName)
-        val lastNameValidationResult = nameValidator.execute(registrationFormState.value.lastname)
-        val termsValidationResult = termsValidator.execute(registrationFormState.value.isTermsAccepted)
+        val firstNameValidationResult = nameValidator.validate(registrationFormState.value.firstName)
+        val lastNameValidationResult = nameValidator.validate(registrationFormState.value.lastname)
+        val termsValidationResult = termsAcceptedValidator.validate(registrationFormState.value.isTermsAccepted)
 
         val hasError = listOf(
             emailValidationResult,

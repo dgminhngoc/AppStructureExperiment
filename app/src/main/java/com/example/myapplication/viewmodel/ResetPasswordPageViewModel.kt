@@ -62,7 +62,7 @@ class ResetPasswordPageViewModel(
     }
 
     private fun submitData() {
-        val emailValidationResult = emailValidator.execute(resetPasswordFormState.value.email)
+        val emailValidationResult = emailValidator.validate(resetPasswordFormState.value.email)
 
         val hasError = listOf(
             emailValidationResult,

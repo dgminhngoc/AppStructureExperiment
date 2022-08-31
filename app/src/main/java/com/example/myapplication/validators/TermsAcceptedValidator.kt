@@ -1,7 +1,7 @@
 package com.example.myapplication.validators
 
-class TermsValidator {
-    fun execute(isTermsAccepted: Boolean) : ValidationResult {
+class TermsAcceptedValidator {
+    fun validate(isTermsAccepted: Boolean) : ValidationResult {
         if(!isTermsAccepted) {
             return ValidationResult(
                 successful = false,

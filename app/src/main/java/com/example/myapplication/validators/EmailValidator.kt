@@ -3,7 +3,7 @@ package com.example.myapplication.validators
 import android.util.Patterns
 
 class EmailValidator {
-    fun execute(email: String) : ValidationResult {
+    fun validate(email: String) : ValidationResult {
         if(email.isBlank()) {
             return ValidationResult(
                 successful = false,
