@@ -47,8 +47,6 @@ fun LoginPage(
     appViewModel: IAppViewModel =
         ViewModels.get(IAppViewModel::class.java.name),
 ) {
-    val shouldPasswordVisible = remember{mutableStateOf(false) }
-
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {
         onDispose {
@@ -90,6 +88,7 @@ fun LoginPage(
     ) {
         var email = loginFormState.email
         var password = loginFormState.password
+        val isPasswordVisible = loginFormState.isPasswordVisible
         Text(
             modifier = Modifier
                 .padding(top = 20.dp),
@@ -110,6 +109,7 @@ fun LoginPage(
                         loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
                             email = email,
                             password = password,
+                            isPasswordVisible = isPasswordVisible
                         ))
                     },
                     isError = loginFormState.emailError != null,
@@ -131,7 +131,7 @@ fun LoginPage(
                         ),
                     enabled = !(loginPageUIState is LoginPageUIState.RequestSending),
                     visualTransformation =
-                        if (shouldPasswordVisible.value) {
+                        if (isPasswordVisible) {
                             VisualTransformation.None
                         }
                         else {
@@ -144,19 +144,28 @@ fun LoginPage(
                         loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
                             email = email,
                             password = password,
+                            isPasswordVisible = isPasswordVisible
                         ))
                     },
                     isError = loginFormState.passwordError != null,
                     placeholder = { Text("Password") },
                     trailingIcon = {
-                        val image = if (shouldPasswordVisible.value)
+                        val image = if (isPasswordVisible)
                             Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
 
                         // Please provide localized description for accessibility services
-                        val description = if (shouldPasswordVisible.value) "Hide password" else "Show password"
+                        val description = if (isPasswordVisible) "Hide password" else "Show password"
 
-                        IconButton(onClick = {shouldPasswordVisible.value = !shouldPasswordVisible.value}){
+                        IconButton(
+                            onClick = {
+                                loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
+                                    email = email,
+                                    password = password,
+                                    isPasswordVisible = isPasswordVisible
+                                ))
+                            }
+                        ){
                             Icon(imageVector  = image, description)
                         }
                     }

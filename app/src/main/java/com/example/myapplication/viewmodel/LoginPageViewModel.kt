@@ -13,6 +13,7 @@ sealed class LoginFormEvent {
     data class LoginFormChanged(
         val email: String,
         val password: String,
+        val isPasswordVisible: Boolean
     ): LoginFormEvent()
 
     object LoginFormSubmit: LoginFormEvent()
@@ -23,6 +24,7 @@ data class LoginFormState(
     val emailError: String? = null,
     val password: String = "",
     val passwordError: String? = null,
+    val isPasswordVisible: Boolean = false
 )
 
 sealed class LoginPageUIState {
@@ -70,6 +72,7 @@ class LoginPageViewModel(
                 _loginFormState.value = LoginFormState(
                     email = event.email,
                     password = event.password,
+                    isPasswordVisible = event.isPasswordVisible
                 )
             }
             is LoginFormEvent.LoginFormSubmit -> {
