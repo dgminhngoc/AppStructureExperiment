@@ -26,14 +26,13 @@ import com.example.myapplication.viewmodel.*
 )
 @Composable
 fun ResetPasswordPagePreview() {
-    val provider = ViewModelProvider()
+    val viewModels = ViewModelProvider()
     MyApplicationTheme {
-        CompositionLocalProvider(LocalViewModelProvider provides provider) {
+        CompositionLocalProvider(LocalViewModelProvider provides viewModels) {
             ResetPasswordPage()
         }
     }
 }
-
 
 @Composable
 fun ResetPasswordPage(
