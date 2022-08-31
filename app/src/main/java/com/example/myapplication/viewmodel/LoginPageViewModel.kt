@@ -19,14 +19,6 @@ sealed class LoginFormEvent {
     object LoginFormSubmit: LoginFormEvent()
 }
 
-data class LoginFormState(
-    val email: String = "",
-    val emailError: String? = null,
-    val password: String = "",
-    val passwordError: String? = null,
-    val isPasswordVisible: Boolean = false
-)
-
 sealed class LoginPageUIState {
     object RequestSending: LoginPageUIState()
 
@@ -36,6 +28,14 @@ sealed class LoginPageUIState {
 
     object Standard: LoginPageUIState()
 }
+
+data class LoginFormState(
+    val email: String = "",
+    val emailError: String? = null,
+    val password: String = "",
+    val passwordError: String? = null,
+    val isPasswordVisible: Boolean = false
+)
 
 interface ILoginPageViewModel: IViewModel {
     val loginFormState: StateFlow<LoginFormState>

@@ -11,13 +11,25 @@ sealed class RegistrationFormEvent {
     data class RegistrationFormChanged(
         val email: String,
         val password: String,
+        val isPasswordVisible: Boolean,
         val repeatedPassword: String,
+        val isRepeatedPasswordVisible: Boolean,
         val firstName: String,
         val lastName: String,
         val isTermsAccepted: Boolean,
     ): RegistrationFormEvent()
 
     object RegistrationFormSubmit: RegistrationFormEvent()
+}
+
+sealed class RegistrationPageUIState {
+    object RequestSending: RegistrationPageUIState()
+
+    data class ResultReceived(
+        val requestResult: RequestResult<String>
+    ): RegistrationPageUIState()
+
+    object Standard: RegistrationPageUIState()
 }
 
 data class RegistrationFormState(
@@ -29,15 +41,17 @@ data class RegistrationFormState(
     val emailError: String? = null,
     val password: String = "",
     val passwordError: String? = null,
+    val isPasswordVisible: Boolean = false,
     val repeatedPassword: String = "",
     val repeatedPasswordError: String? = null,
+    val isRepeatedPasswordVisible: Boolean = false,
     val isTermsAccepted: Boolean = false,
     val isTermsAcceptedError: String? = null,
 )
 
 interface IRegistrationPageViewModel: IViewModel {
     val registrationFormState: StateFlow<RegistrationFormState>
-    val registrationSubmittedState: StateFlow<Boolean>
+    val registrationPageUIState: StateFlow<RegistrationPageUIState>
     fun onEvent(event: RegistrationFormEvent)
 }
 
@@ -57,11 +71,11 @@ class RegistrationPageViewModel(
         SharingStarted.Eagerly,
         _registrationFormState.value
     )
-    private val _registrationSubmittedState = MutableStateFlow(false)
-    override val registrationSubmittedState = _registrationSubmittedState.map { it }.stateIn(
+    private val _registrationPageUIState = MutableStateFlow<RegistrationPageUIState>(RegistrationPageUIState.Standard)
+    override val registrationPageUIState = _registrationPageUIState.map { it }.stateIn(
         CoroutineScope(Dispatchers.Main),
         SharingStarted.Eagerly,
-        _registrationSubmittedState.value
+        _registrationPageUIState.value
     )
 
     private var registrationJob: Job? = null
@@ -77,10 +91,12 @@ class RegistrationPageViewModel(
                 _registrationFormState.value = RegistrationFormState(
                     email = event.email,
                     password = event.password,
+                    isPasswordVisible = event.isPasswordVisible,
                     repeatedPassword = event.repeatedPassword,
+                    isRepeatedPasswordVisible = event.isRepeatedPasswordVisible,
                     firstName = event.firstName,
                     lastname = event.lastName,
-                    isTermsAccepted = event.isTermsAccepted
+                    isTermsAccepted = event.isTermsAccepted,
                 )
             }
             is RegistrationFormEvent.RegistrationFormSubmit -> {
@@ -126,24 +142,19 @@ class RegistrationPageViewModel(
             return
         }
 
-        registrationJob = CoroutineScope(defaultDispatcher).launch {
-            when(val result = dataRepository.register(
-                email = registrationFormState.value.email,
-                password = registrationFormState.value.password,
-                firstName = registrationFormState.value.firstName,
-                lastName = registrationFormState.value.lastname,
-                authority = "ROLE_GUEST"
-            )){
-                is RequestResult.OnSuccess -> {
-                    result.data?.let {
-                        _registrationSubmittedState.value = true
-                    }
+        _registrationPageUIState.value = RegistrationPageUIState.RequestSending
 
-                }
-                is RequestResult.OnError -> {
-                    _registrationSubmittedState.value = false
-                }
-            }
+        registrationJob = CoroutineScope(defaultDispatcher).launch {
+
+            _registrationPageUIState.value = RegistrationPageUIState.ResultReceived(
+                requestResult = dataRepository.register(
+                    email = registrationFormState.value.email,
+                    password = registrationFormState.value.password,
+                    firstName = registrationFormState.value.firstName,
+                    lastName = registrationFormState.value.lastname,
+                    authority = "ROLE_GUEST"
+                )
+            )
         }
     }
 

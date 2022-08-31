@@ -156,7 +156,7 @@ fun LoginPage(
                                 loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
                                     email = email,
                                     password = password,
-                                    isPasswordVisible = isPasswordVisible
+                                    isPasswordVisible = !isPasswordVisible
                                 ))
                             }
                         ){
@@ -186,9 +186,7 @@ fun LoginPage(
                 )
             }
         }
-        Box(
-            modifier = Modifier.padding(bottom = 20.dp)
-        ) {
+        Box(modifier = Modifier.padding(bottom = 20.dp)) {
             Column {
                 Button(
                     modifier = Modifier.fillMaxWidth(),

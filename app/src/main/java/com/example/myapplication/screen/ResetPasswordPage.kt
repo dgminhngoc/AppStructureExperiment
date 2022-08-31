@@ -97,7 +97,7 @@ fun ResetPasswordFormPage(
                 .fillMaxWidth()
         ) {
             Text(
-                modifier = Modifier.padding(bottom = 5.dp),
+                modifier = Modifier.padding(bottom = 10.dp),
                 text = "Please enter the email address you used to create your WP account. We will then email you a link that you can use to reset your password",
             )
             OutlinedTextField(
@@ -135,7 +135,11 @@ fun ResetPasswordFormPage(
                 resetPasswordPageViewModel.onEvent(ResetPasswordFormEvent.ResetPasswordFormSubmit)
             }
         ) {
-            Text(text = "Reset Password")
+            Text(text = if(resetPasswordPageUIState is ResetPasswordPageUIState.RequestSending) {
+                "Sending request..."
+            } else {
+                "Reset Password"
+            })
         }
         Text(
             modifier = Modifier
@@ -155,45 +159,43 @@ fun ResetPasswordFormPage(
 fun ResetPasswordSuccessPage(
     loginScreenViewModel: ILoginScreenViewModel
 ) {
-    Box {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .padding(horizontal = 30.dp)
+    ) {
+        Icon(
             modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .padding(horizontal = 30.dp)
-        ) {
-            Icon(
-                modifier = Modifier
-                    .height(100.dp)
-                    .width(100.dp)
-                    .padding(bottom = 10.dp),
-                imageVector = Icons.Outlined.Email,
-                contentDescription = null,
-                tint = MaterialTheme.colors.primary
-            )
-            Text(
-                modifier = Modifier.padding(bottom = 8.dp),
-                text = "YOUR PASSWORD IS ON THE WAY",
-                fontWeight = FontWeight.Bold,
-                fontSize = 17.sp,
-            )
-            Text(
-                modifier = Modifier.padding(bottom = 8.dp),
-                text = "Please open your email and click on the link to create a new password",
-                textAlign = TextAlign.Center,
-            )
+                .height(100.dp)
+                .width(100.dp)
+                .padding(bottom = 10.dp),
+            imageVector = Icons.Outlined.Email,
+            contentDescription = null,
+            tint = MaterialTheme.colors.primary
+        )
+        Text(
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = "YOUR PASSWORD IS ON THE WAY",
+            fontWeight = FontWeight.Bold,
+            fontSize = 17.sp,
+        )
+        Text(
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = "Please open your email and click on the link to create a new password",
+            textAlign = TextAlign.Center,
+        )
 
-            Text(
-                modifier = Modifier
-                    .clickable {
-                        loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.LOGIN))
-                    },
-                text = "Back to login",
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colors.primary
-            )
-        }
+        Text(
+            modifier = Modifier
+                .clickable {
+                    loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.LOGIN))
+                },
+            text = "Back to login",
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.primary
+        )
     }
 }
