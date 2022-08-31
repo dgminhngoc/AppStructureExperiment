@@ -3,6 +3,7 @@ package com.example.myapplication.screen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -13,7 +14,10 @@ import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -108,12 +112,13 @@ fun RegisterFormPage(
             text = "Register",
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.onSurface,
-            fontSize = 30.sp
+            fontSize = 25.sp
         )
 
 
         Box {
             Column {
+                val focusManager = LocalFocusManager.current
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -133,7 +138,14 @@ fun RegisterFormPage(
                         ))
                     },
                     isError = registrationFormState.emailError != null,
-                    placeholder = { Text("E-Mail") }
+                    placeholder = { Text("E-Mail") },
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        }
+                    ),
                 )
                 registrationFormState.emailError?.let {
                     Text(
@@ -157,7 +169,6 @@ fun RegisterFormPage(
                     else {
                         PasswordVisualTransformation()
                     },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     onValueChange = {
                         password = it
                         registrationPageViewModel.onEvent(RegistrationFormEvent.RegistrationFormChanged(
@@ -173,6 +184,16 @@ fun RegisterFormPage(
                     },
                     isError = registrationFormState.passwordError != null,
                     placeholder = { Text("Password") },
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Password
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        }
+                    ),
                     trailingIcon = {
                         val image = if (isPasswordVisible)
                             Icons.Filled.Visibility
@@ -220,7 +241,6 @@ fun RegisterFormPage(
                         else {
                             PasswordVisualTransformation()
                         },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     value = repeatedPassword,
                     onValueChange = {
                         repeatedPassword = it
@@ -237,6 +257,16 @@ fun RegisterFormPage(
                     },
                     isError = registrationFormState.repeatedPasswordError != null,
                     placeholder = { Text("Repeat password") },
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Password
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        }
+                    ),
                     trailingIcon = {
                         val image = if (isRepeatedPasswordVisible)
                             Icons.Filled.Visibility
@@ -292,7 +322,14 @@ fun RegisterFormPage(
                         ))
                     },
                     isError = registrationFormState.firstNameError != null,
-                    placeholder = { Text("First Name") }
+                    placeholder = { Text("First Name") },
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        }
+                    ),
                 )
                 registrationFormState.firstNameError?.let {
                     Text(
@@ -322,7 +359,16 @@ fun RegisterFormPage(
                         ))
                     },
                     isError = registrationFormState.lastnameError != null,
-                    placeholder = { Text("Last Name") }
+                    placeholder = { Text("Last Name") },
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus(force = true)
+                        }
+                    ),
                 )
                 registrationFormState.lastnameError?.let {
                     Text(
@@ -342,6 +388,7 @@ fun RegisterFormPage(
                 ) {
                     Checkbox(
                         checked = isTermsAccepted,
+                        colors = CheckboxDefaults.colors(MaterialTheme.colors.primary),
                         enabled = registrationPageUIState !is RegistrationPageUIState.RequestSending,
                         onCheckedChange = {
                             isTermsAccepted = it

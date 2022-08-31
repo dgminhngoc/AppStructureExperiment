@@ -2,6 +2,8 @@ package com.example.myapplication.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
@@ -9,6 +11,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -89,7 +93,7 @@ fun ResetPasswordFormPage(
             text = "Forgot password",
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.onSurface,
-            fontSize = 30.sp
+            fontSize = 25.sp
         )
         Column(
             verticalArrangement = Arrangement.Top,
@@ -112,7 +116,17 @@ fun ResetPasswordFormPage(
                         ))
                 },
                 isError = resetPasswordFormState.emailError != null,
-                placeholder = { Text("E-Mail") }
+                placeholder = { Text("E-Mail") },
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        resetPasswordPageViewModel.onEvent(ResetPasswordFormEvent.ResetPasswordFormSubmit)
+                    }
+                ),
             )
             resetPasswordFormState.emailError?.let {
                 Text(

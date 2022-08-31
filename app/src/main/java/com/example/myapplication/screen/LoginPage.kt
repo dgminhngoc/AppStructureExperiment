@@ -2,6 +2,7 @@ package com.example.myapplication.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,7 +11,10 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -73,7 +77,6 @@ fun LoginPage(
         else ->{}
     }
 
-
     val loginFormState by loginPageViewModel.loginFormState.collectAsState()
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -91,10 +94,11 @@ fun LoginPage(
             text = "Login",
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.onSurface,
-            fontSize = 30.sp
+            fontSize = 25.sp
         )
         Box{
             Column {
+                val focusManager = LocalFocusManager.current
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -109,7 +113,14 @@ fun LoginPage(
                         ))
                     },
                     isError = loginFormState.emailError != null,
-                    placeholder = { Text("E-Mail") }
+                    placeholder = { Text("E-Mail") },
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        }
+                    ),
                 )
                 loginFormState.emailError?.let {
                     Text(
@@ -131,7 +142,15 @@ fun LoginPage(
                         else {
                             PasswordVisualTransformation()
                         },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            loginPageViewModel.onEvent(LoginFormEvent.LoginFormSubmit)
+                        }
+                    ),
                     value = password,
                     onValueChange = {
                         password = it
@@ -143,6 +162,7 @@ fun LoginPage(
                     },
                     isError = loginFormState.passwordError != null,
                     placeholder = { Text("Password") },
+                    maxLines = 1,
                     trailingIcon = {
                         val image = if (isPasswordVisible)
                             Icons.Filled.Visibility
