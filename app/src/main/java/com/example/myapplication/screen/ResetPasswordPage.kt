@@ -131,6 +131,7 @@ fun ResetPasswordFormPage(
         }
         Button(
             modifier = Modifier.fillMaxWidth(),
+            enabled = resetPasswordPageUIState !is ResetPasswordPageUIState.RequestSending,
             onClick = {
                 resetPasswordPageViewModel.onEvent(ResetPasswordFormEvent.ResetPasswordFormSubmit)
             }
