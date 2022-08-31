@@ -4,12 +4,12 @@ class RepeatedPasswordValidator {
     fun validate(password: String, repeatedPassword: String) : ValidationResult {
         return if(password != repeatedPassword) {
             ValidationResult(
-                successful = false,
+                isSuccessful = false,
                 errorMessage = "The passwords don't match"
             )
         } else {
             ValidationResult(
-                successful = true,
+                isSuccessful = true,
             )
         }
     }

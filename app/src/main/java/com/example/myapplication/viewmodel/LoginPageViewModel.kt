@@ -25,14 +25,19 @@ data class LoginFormState(
     val passwordError: String? = null,
 )
 
-data class LoginFormSubmittedState(
-    val isSuccessful: Boolean = false,
-    val user: User? = null,
-)
+sealed class LoginPageUIState {
+    object RequestSending: LoginPageUIState()
+
+    data class ResultReceived(
+        val requestResult: RequestResult<User>
+    ): LoginPageUIState()
+
+    object Standard: LoginPageUIState()
+}
 
 interface ILoginPageViewModel: IViewModel {
     val loginFormState: StateFlow<LoginFormState>
-    val loginFormSubmittedState: StateFlow<LoginFormSubmittedState>
+    val loginPageUIState: StateFlow<LoginPageUIState>
     fun onEvent(event: LoginFormEvent)
 }
 
@@ -49,11 +54,11 @@ class LoginPageViewModel(
         SharingStarted.Eagerly,
         _loginFormState.value
     )
-    private val _loginFormSubmittedState = MutableStateFlow(LoginFormSubmittedState())
-    override val loginFormSubmittedState = _loginFormSubmittedState.map { it }.stateIn(
+    private val _loginPageUIState = MutableStateFlow<LoginPageUIState>(LoginPageUIState.Standard)
+    override val loginPageUIState = _loginPageUIState.map { it }.stateIn(
         CoroutineScope(Dispatchers.Main),
         SharingStarted.Eagerly,
-        _loginFormSubmittedState.value
+        _loginPageUIState.value
     )
 
     private var loginJob: Job? = null
@@ -95,26 +100,15 @@ class LoginPageViewModel(
             return
         }
 
+        _loginPageUIState.value = LoginPageUIState.RequestSending
         loginJob = CoroutineScope(defaultDispatcher).launch {
-            when(val result = dataRepository.authenticate(
-                email = _loginFormState.value.email,
-                password = _loginFormState.value.password
-            )){
-                is RequestResult.OnSuccess -> {
-                    result.data?.let {
-                        _loginFormSubmittedState.value = LoginFormSubmittedState(
-                            isSuccessful = true,
-                            user = it
-                        )
-                    }
-
-                }
-                is RequestResult.OnError -> {
-                    _loginFormSubmittedState.value = LoginFormSubmittedState(
-                        isSuccessful = false,
-                    )
-                }
-            }
+            delay(5000)
+            _loginPageUIState.value = LoginPageUIState.ResultReceived(
+                requestResult = dataRepository.authenticate(
+                    email = _loginFormState.value.email,
+                    password = _loginFormState.value.password
+                )
+            )
         }
     }
 

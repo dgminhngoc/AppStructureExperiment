@@ -2,32 +2,39 @@ package com.example.myapplication.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.domain.RequestResult
 import com.example.myapplication.providers.LocalViewModelProvider
 import com.example.myapplication.providers.ViewModelProvider
 import com.example.myapplication.providers.ViewModels
+import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.*
 
 @Preview(
     widthDp = 400,
-    heightDp = 600
+    heightDp = 400
 )
 @Composable
 fun LoginPagePreview() {
     val provider = ViewModelProvider()
-    CompositionLocalProvider(LocalViewModelProvider provides provider) {
-        LoginPage()
+    MyApplicationTheme {
+        CompositionLocalProvider(LocalViewModelProvider provides provider) {
+            LoginPage()
+        }
     }
 }
 
@@ -40,6 +47,7 @@ fun LoginPage(
     appViewModel: IAppViewModel =
         ViewModels.get(IAppViewModel::class.java.name),
 ) {
+    val shouldPasswordVisible = remember{mutableStateOf(false) }
 
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {
@@ -50,12 +58,23 @@ fun LoginPage(
         }
     }
 
-    val loginFormSubmittedState by loginPageViewModel.loginFormSubmittedState.collectAsState()
-    if(loginFormSubmittedState.isSuccessful) {
-        loginFormSubmittedState.user?.let {
-            appViewModel.onUIEvent(UIEvent.Login(user = it))
+    val loginPageUIState by loginPageViewModel.loginPageUIState.collectAsState()
+    when(loginPageUIState) {
+        is LoginPageUIState.ResultReceived -> {
+            when(val requestResult = (loginPageUIState as LoginPageUIState.ResultReceived).requestResult) {
+                is RequestResult.OnSuccess -> {
+                    requestResult.data?.let {
+                        appViewModel.onUIEvent(UIEvent.Login(user = it))
+                    }
+                }
+                is RequestResult.OnError -> {
+
+                }
+             }
         }
+        else ->{}
     }
+
 
     val loginFormState by loginPageViewModel.loginFormState.collectAsState()
     Column(
@@ -84,6 +103,7 @@ fun LoginPage(
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
+                    enabled = loginPageUIState !is LoginPageUIState.RequestSending,
                     value = email,
                     onValueChange = {
                         email = it
@@ -109,6 +129,14 @@ fun LoginPage(
                         .padding(
                             top = 10.dp
                         ),
+                    enabled = !(loginPageUIState is LoginPageUIState.RequestSending),
+                    visualTransformation =
+                        if (shouldPasswordVisible.value) {
+                            VisualTransformation.None
+                        }
+                        else {
+                            PasswordVisualTransformation()
+                        },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     value = password,
                     onValueChange = {
@@ -119,7 +147,19 @@ fun LoginPage(
                         ))
                     },
                     isError = loginFormState.passwordError != null,
-                    placeholder = { Text("Password") }
+                    placeholder = { Text("Password") },
+                    trailingIcon = {
+                        val image = if (shouldPasswordVisible.value)
+                            Icons.Filled.Visibility
+                        else Icons.Filled.VisibilityOff
+
+                        // Please provide localized description for accessibility services
+                        val description = if (shouldPasswordVisible.value) "Hide password" else "Show password"
+
+                        IconButton(onClick = {shouldPasswordVisible.value = !shouldPasswordVisible.value}){
+                            Icon(imageVector  = image, description)
+                        }
+                    }
                 )
                 loginFormState.passwordError?.let {
                     Text(
@@ -132,7 +172,7 @@ fun LoginPage(
                 Text(
                     modifier = Modifier
                         .padding(
-                            top = 10.dp
+                            top = 5.dp
                         )
                         .clickable {
                             loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.RESET_PASSWORD))
@@ -153,15 +193,28 @@ fun LoginPage(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         loginPageViewModel.onEvent(LoginFormEvent.LoginFormSubmit)
-                    }
+                    },
+                    enabled = !(loginPageUIState is LoginPageUIState.RequestSending)
                 ) {
-                    Text(text = "Login")
+                    Text(
+                        text = if(loginPageUIState is LoginPageUIState.RequestSending) {
+                            "Logging in..."
+                        } else {
+                            "Login"
+                        }
+                    )
                 }
-                Text(text = "You don't have an account?")
                 Text(
                     modifier = Modifier
                         .padding(
-                            top = 10.dp
+                            top = 5.dp
+                        ),
+                    text = "You don't have an account?"
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(
+                            top = 5.dp
                         )
                         .clickable {
                             loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.REGISTER))

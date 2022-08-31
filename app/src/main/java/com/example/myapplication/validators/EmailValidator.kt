@@ -6,20 +6,20 @@ class EmailValidator {
     fun validate(email: String) : ValidationResult {
         if(email.isBlank()) {
             return ValidationResult(
-                successful = false,
+                isSuccessful = false,
                 errorMessage = "The E-Mail can not be blank"
             )
         }
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return ValidationResult(
-                successful = false,
+                isSuccessful = false,
                 errorMessage = "E-Mail is not valid"
             )
         }
 
         return ValidationResult(
-            successful = true,
+            isSuccessful = true,
         )
     }
 }

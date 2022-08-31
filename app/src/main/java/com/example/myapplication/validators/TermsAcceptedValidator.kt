@@ -4,13 +4,13 @@ class TermsAcceptedValidator {
     fun validate(isTermsAccepted: Boolean) : ValidationResult {
         if(!isTermsAccepted) {
             return ValidationResult(
-                successful = false,
+                isSuccessful = false,
                 errorMessage = "Please accept the terms"
             )
         }
 
         return ValidationResult(
-            successful = true,
+            isSuccessful = true,
         )
     }
 }
