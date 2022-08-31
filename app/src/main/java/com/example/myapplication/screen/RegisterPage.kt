@@ -102,10 +102,7 @@ fun RegisterFormPage(
             .fillMaxHeight()
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
-            .padding(
-                start = 30.dp,
-                end = 30.dp,
-            )
+            .padding(start = 30.dp, end = 30.dp,)
     ) {
         Text(
             modifier = Modifier.padding(top = 20.dp),
@@ -115,13 +112,11 @@ fun RegisterFormPage(
             fontSize = 25.sp
         )
 
-
         Box {
             Column {
                 val focusManager = LocalFocusManager.current
                 OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     enabled = registrationPageUIState !is RegistrationPageUIState.RequestSending,
                     value = email,
                     onValueChange = {

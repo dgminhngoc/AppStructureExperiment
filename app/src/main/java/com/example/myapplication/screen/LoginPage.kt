@@ -100,8 +100,7 @@ fun LoginPage(
             Column {
                 val focusManager = LocalFocusManager.current
                 OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     enabled = loginPageUIState !is LoginPageUIState.RequestSending,
                     value = email,
                     onValueChange = {
@@ -194,9 +193,7 @@ fun LoginPage(
                 }
                 Text(
                     modifier = Modifier
-                        .padding(
-                            top = 5.dp
-                        )
+                        .padding(top = 5.dp)
                         .clickable {
                             loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.RESET_PASSWORD))
                         },
@@ -224,8 +221,7 @@ fun LoginPage(
                     )
                 }
                 Text(
-                    modifier = Modifier
-                        .padding(top = 5.dp),
+                    modifier = Modifier.padding(top = 5.dp),
                     text = "You don't have an account?"
                 )
                 Text(
