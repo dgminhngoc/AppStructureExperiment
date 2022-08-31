@@ -129,7 +129,7 @@ fun LoginPage(
                         .padding(
                             top = 10.dp
                         ),
-                    enabled = !(loginPageUIState is LoginPageUIState.RequestSending),
+                    enabled = loginPageUIState !is LoginPageUIState.RequestSending,
                     visualTransformation =
                         if (isPasswordVisible) {
                             VisualTransformation.None
@@ -203,7 +203,7 @@ fun LoginPage(
                     onClick = {
                         loginPageViewModel.onEvent(LoginFormEvent.LoginFormSubmit)
                     },
-                    enabled = !(loginPageUIState is LoginPageUIState.RequestSending)
+                    enabled = loginPageUIState !is LoginPageUIState.RequestSending
                 ) {
                     Text(
                         text = if(loginPageUIState is LoginPageUIState.RequestSending) {
