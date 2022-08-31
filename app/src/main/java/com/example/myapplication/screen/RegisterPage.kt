@@ -115,6 +115,7 @@ fun RegisterFormPage(
         Box {
             Column {
                 val focusManager = LocalFocusManager.current
+
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = registrationPageUIState !is RegistrationPageUIState.RequestSending,
@@ -334,6 +335,7 @@ fun RegisterFormPage(
                         modifier = Modifier.padding(top = 5.dp)
                     )
                 }
+
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -465,12 +467,14 @@ fun RegisterSuccessPage(
             contentDescription = null,
             tint = MaterialTheme.colors.primary
         )
+
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
             text = "ONE MORE STEP",
             fontWeight = FontWeight.Bold,
             fontSize = 17.sp,
         )
+
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
             text = "Please open your email and click on the link to confirm your accout",

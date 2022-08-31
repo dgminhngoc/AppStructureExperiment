@@ -95,6 +95,7 @@ fun ResetPasswordFormPage(
             color = MaterialTheme.colors.onSurface,
             fontSize = 25.sp
         )
+
         Column(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
@@ -104,6 +105,7 @@ fun ResetPasswordFormPage(
                 modifier = Modifier.padding(bottom = 10.dp),
                 text = "Please enter the email address you used to create your WP account. We will then email you a link that you can use to reset your password",
             )
+
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = resetPasswordPageUIState !is ResetPasswordPageUIState.RequestSending,
@@ -137,11 +139,13 @@ fun ResetPasswordFormPage(
                 )
             }
         }
+
         Box(
             modifier = Modifier.weight(1f)
         ) {
             Spacer(Modifier.fillMaxHeight())
         }
+
         Button(
             modifier = Modifier.fillMaxWidth(),
             enabled = resetPasswordPageUIState !is ResetPasswordPageUIState.RequestSending,
@@ -155,6 +159,7 @@ fun ResetPasswordFormPage(
                 "Reset Password"
             })
         }
+
         Text(
             modifier = Modifier
                 .padding(top = 5.dp, bottom = 20.dp)
@@ -190,12 +195,14 @@ fun ResetPasswordSuccessPage(
             contentDescription = null,
             tint = MaterialTheme.colors.primary
         )
+
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
             text = "YOUR PASSWORD IS ON THE WAY",
             fontWeight = FontWeight.Bold,
             fontSize = 17.sp,
         )
+
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
             text = "Please open your email and click on the link to create a new password",
