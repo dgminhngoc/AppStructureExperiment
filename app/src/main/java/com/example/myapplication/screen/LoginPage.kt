@@ -26,7 +26,7 @@ import com.example.myapplication.viewmodel.*
 
 @Preview(
     widthDp = 400,
-    heightDp = 400
+    heightDp = 800
 )
 @Composable
 fun LoginPagePreview() {
@@ -81,18 +81,14 @@ fun LoginPage(
         modifier = Modifier
             .fillMaxHeight()
             .fillMaxWidth()
-            .padding(
-                start = 30.dp,
-                end = 30.dp,
-            )
+            .padding(start = 30.dp, end = 30.dp,)
     ) {
         var email = loginFormState.email
         var password = loginFormState.password
         val isPasswordVisible = loginFormState.isPasswordVisible
         Text(
-            modifier = Modifier
-                .padding(top = 20.dp),
-            text = "LOGIN",
+            modifier = Modifier.padding(top = 20.dp),
+            text = "Login",
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.onSurface,
             fontSize = 30.sp
@@ -126,9 +122,7 @@ fun LoginPage(
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                            top = 10.dp
-                        ),
+                        .padding(top = 10.dp),
                     enabled = loginPageUIState !is LoginPageUIState.RequestSending,
                     visualTransformation =
                         if (isPasswordVisible) {
@@ -193,9 +187,7 @@ fun LoginPage(
             }
         }
         Box(
-            modifier = Modifier.padding(
-                bottom = 20.dp
-            )
+            modifier = Modifier.padding(bottom = 20.dp)
         ) {
             Column {
                 Button(
@@ -215,16 +207,12 @@ fun LoginPage(
                 }
                 Text(
                     modifier = Modifier
-                        .padding(
-                            top = 5.dp
-                        ),
+                        .padding(top = 5.dp),
                     text = "You don't have an account?"
                 )
                 Text(
                     modifier = Modifier
-                        .padding(
-                            top = 5.dp
-                        )
+                        .padding(top = 5.dp)
                         .clickable {
                             loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.REGISTER))
                         },

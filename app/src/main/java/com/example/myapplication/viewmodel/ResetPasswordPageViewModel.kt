@@ -15,6 +15,14 @@ sealed class ResetPasswordFormEvent {
     object ResetPasswordFormSubmit: ResetPasswordFormEvent()
 }
 
+sealed class ResetPasswordPageUIState {
+    object RequestSending: ResetPasswordPageUIState()
+    data class ResultReceived(
+        val requestResult: RequestResult<String>
+    ): ResetPasswordPageUIState()
+    object Standard: ResetPasswordPageUIState()
+}
+
 data class ResetPasswordFormState(
     val email: String = "",
     val emailError: String? = null,
@@ -22,7 +30,7 @@ data class ResetPasswordFormState(
 
 interface IResetPasswordPageViewModel: IViewModel {
     val resetPasswordFormState: StateFlow<ResetPasswordFormState>
-    val resetPasswordSubmittedState: StateFlow<Boolean>
+    val resetPasswordPageUIState: StateFlow<ResetPasswordPageUIState>
     fun onEvent(event: ResetPasswordFormEvent)
 }
 
@@ -38,11 +46,11 @@ class ResetPasswordPageViewModel(
         SharingStarted.Eagerly,
         _resetPasswordFormState.value
     )
-    private val _resetPasswordSubmittedState = MutableStateFlow(false)
-    override val resetPasswordSubmittedState = _resetPasswordSubmittedState.map { it }.stateIn(
+    private val _resetPasswordPageUIState = MutableStateFlow<ResetPasswordPageUIState>(ResetPasswordPageUIState.Standard)
+    override val resetPasswordPageUIState = _resetPasswordPageUIState.map { it }.stateIn(
         CoroutineScope(Dispatchers.Main),
         SharingStarted.Eagerly,
-        _resetPasswordSubmittedState.value
+        _resetPasswordPageUIState.value
     )
 
     private var resetPasswordJob: Job? = null
@@ -80,20 +88,13 @@ class ResetPasswordPageViewModel(
             return
         }
 
+        _resetPasswordPageUIState.value = ResetPasswordPageUIState.RequestSending
         resetPasswordJob = CoroutineScope(defaultDispatcher).launch {
-            when(val result = dataRepository.resetPassword(
-                email = resetPasswordFormState.value.email,
-            )){
-                is RequestResult.OnSuccess -> {
-                    result.data?.let {
-                        _resetPasswordSubmittedState.value = true
-                    }
-
-                }
-                is RequestResult.OnError -> {
-                    _resetPasswordSubmittedState.value = false
-                }
-            }
+            _resetPasswordPageUIState.value = ResetPasswordPageUIState.ResultReceived(
+                requestResult = dataRepository.resetPassword(
+                    email = resetPasswordFormState.value.email,
+                )
+            )
         }
     }
 

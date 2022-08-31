@@ -171,42 +171,43 @@ class ServerDataRepository: IServerDataRepository {
         var errorCode: Int? = null
         var exception: Exception? = null
 
-        try {
-            val response = HttpClient().post("$SERVER_URL$API_RESET_PASSWORD"){
-                headers {
-                    append(
-                        name = "Content-Type",
-                        value = "application/json"
-                    )
-                    append(
-                        name = "Accept-Version",
-                        value = "1.0.0"
-                    )
-                }
-                setBody(
-                    body = JsonObject().apply {
-                        addProperty("email", email)
-                    }.asString
-                )
-            }
-
-            when(response.status) {
-                HttpStatusCode.OK -> {
-                    return RequestResult.OnSuccess(data = response.body<String?>().toString())
-                }
-                else -> {
-                    errorCode = response.status.value
-                }
-            }
-        }
-        catch (e: Exception) {
-            exception = e
-        }
-
-        return RequestResult.OnError(
-            errorCode = errorCode,
-            exception = exception,
-        )
+//        try {
+//            val response = HttpClient().post("$SERVER_URL$API_RESET_PASSWORD"){
+//                headers {
+//                    append(
+//                        name = "Content-Type",
+//                        value = "application/json"
+//                    )
+//                    append(
+//                        name = "Accept-Version",
+//                        value = "1.0.0"
+//                    )
+//                }
+//                setBody(
+//                    body = JsonObject().apply {
+//                        addProperty("email", email)
+//                    }.asString
+//                )
+//            }
+//
+//            when(response.status) {
+//                HttpStatusCode.OK -> {
+//                    return RequestResult.OnSuccess(data = response.body<String?>().toString())
+//                }
+//                else -> {
+//                    errorCode = response.status.value
+//                }
+//            }
+//        }
+//        catch (e: Exception) {
+//            exception = e
+//        }
+//
+//        return RequestResult.OnError(
+//            errorCode = errorCode,
+//            exception = exception,
+//        )
+        return RequestResult.OnSuccess(data = "")
     }
 
     override suspend fun register(
