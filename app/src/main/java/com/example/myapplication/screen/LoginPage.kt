@@ -1,9 +1,12 @@
 package com.example.myapplication.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -23,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.domain.RequestResult
 import com.example.myapplication.providers.LocalViewModelProvider
-import com.example.myapplication.providers.ViewModelProvider
+import com.example.myapplication.providers.ViewModelsProvider
 import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.*
@@ -34,7 +37,7 @@ import com.example.myapplication.viewmodel.*
 )
 @Composable
 fun LoginPagePreview() {
-    val provider = ViewModelProvider()
+    val provider = ViewModelsProvider()
     MyApplicationTheme {
         CompositionLocalProvider(LocalViewModelProvider provides provider) {
             LoginPage()
@@ -78,162 +81,171 @@ fun LoginPage(
     }
 
     val loginFormState by loginPageViewModel.loginFormState.collectAsState()
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.Start,
-        modifier = Modifier
-            .fillMaxHeight()
-            .fillMaxWidth()
-            .padding(start = 30.dp, end = 30.dp,)
-    ) {
-        var email = loginFormState.email
-        var password = loginFormState.password
-        val isPasswordVisible = loginFormState.isPasswordVisible
-        Text(
-            modifier = Modifier.padding(top = 20.dp),
-            text = "Login",
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onSurface,
-            fontSize = 25.sp
-        )
-        Box{
-            Column {
-                val focusManager = LocalFocusManager.current
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = loginPageUIState !is LoginPageUIState.RequestSending,
-                    value = email,
-                    onValueChange = {
-                        email = it
-                        loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
-                            email = email,
-                            password = password,
-                            isPasswordVisible = isPasswordVisible
-                        ))
-                    },
-                    isError = loginFormState.emailError != null,
-                    placeholder = { Text("E-Mail") },
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            focusManager.moveFocus(FocusDirection.Down)
-                        }
-                    ),
+
+    BoxWithConstraints {
+        val constraintsScope = this
+        Column(
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+                .verticalScroll(
+                    state = rememberScrollState(),
+                    enabled = constraintsScope.maxHeight <= 400.dp
                 )
-                loginFormState.emailError?.let {
-                    Text(
-                        text = it,
-                        color = MaterialTheme.colors.error,
-                        style = MaterialTheme.typography.caption,
-                        modifier = Modifier.padding(top = 5.dp)
+                .padding(start = 30.dp, end = 30.dp),
+        ) {
+            var email = loginFormState.email
+            var password = loginFormState.password
+            val isPasswordVisible = loginFormState.isPasswordVisible
+            Text(
+                modifier = Modifier.padding(top = 20.dp),
+                text = "Login",
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.onSurface,
+                fontSize = 25.sp
+            )
+            Box{
+                Column {
+                    val focusManager = LocalFocusManager.current
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = loginPageUIState !is LoginPageUIState.RequestSending,
+                        value = email,
+                        onValueChange = {
+                            email = it
+                            loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
+                                email = email,
+                                password = password,
+                                isPasswordVisible = isPasswordVisible
+                            ))
+                        },
+                        isError = loginFormState.emailError != null,
+                        placeholder = { Text("E-Mail") },
+                        maxLines = 1,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                focusManager.moveFocus(FocusDirection.Down)
+                            }
+                        ),
                     )
-                }
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp),
-                    enabled = loginPageUIState !is LoginPageUIState.RequestSending,
-                    visualTransformation =
+                    loginFormState.emailError?.let {
+                        Text(
+                            text = it,
+                            color = MaterialTheme.colors.error,
+                            style = MaterialTheme.typography.caption,
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                    }
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp),
+                        enabled = loginPageUIState !is LoginPageUIState.RequestSending,
+                        visualTransformation =
                         if (isPasswordVisible) {
                             VisualTransformation.None
                         }
                         else {
                             PasswordVisualTransformation()
                         },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Password,
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            loginPageViewModel.onEvent(LoginFormEvent.LoginFormSubmit)
-                        }
-                    ),
-                    value = password,
-                    onValueChange = {
-                        password = it
-                        loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
-                            email = email,
-                            password = password,
-                            isPasswordVisible = isPasswordVisible
-                        ))
-                    },
-                    isError = loginFormState.passwordError != null,
-                    placeholder = { Text("Password") },
-                    maxLines = 1,
-                    trailingIcon = {
-                        val image = if (isPasswordVisible)
-                            Icons.Filled.Visibility
-                        else Icons.Filled.VisibilityOff
-
-                        // Please provide localized description for accessibility services
-                        val description = if (isPasswordVisible) "Hide password" else "Show password"
-
-                        IconButton(
-                            onClick = {
-                                loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
-                                    email = email,
-                                    password = password,
-                                    isPasswordVisible = !isPasswordVisible
-                                ))
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Password,
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                loginPageViewModel.onEvent(LoginFormEvent.LoginFormSubmit)
                             }
-                        ){
-                            Icon(imageVector  = image, description)
+                        ),
+                        value = password,
+                        onValueChange = {
+                            password = it
+                            loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
+                                email = email,
+                                password = password,
+                                isPasswordVisible = isPasswordVisible
+                            ))
+                        },
+                        isError = loginFormState.passwordError != null,
+                        placeholder = { Text("Password") },
+                        maxLines = 1,
+                        trailingIcon = {
+                            val image = if (isPasswordVisible)
+                                Icons.Filled.Visibility
+                            else Icons.Filled.VisibilityOff
+
+                            // Please provide localized description for accessibility services
+                            val description = if (isPasswordVisible) "Hide password" else "Show password"
+
+                            IconButton(
+                                onClick = {
+                                    loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
+                                        email = email,
+                                        password = password,
+                                        isPasswordVisible = !isPasswordVisible
+                                    ))
+                                }
+                            ){
+                                Icon(imageVector  = image, description)
+                            }
                         }
+                    )
+                    loginFormState.passwordError?.let {
+                        Text(
+                            text = it,
+                            color = MaterialTheme.colors.error,
+                            style = MaterialTheme.typography.caption,
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
                     }
-                )
-                loginFormState.passwordError?.let {
                     Text(
-                        text = it,
-                        color = MaterialTheme.colors.error,
-                        style = MaterialTheme.typography.caption,
-                        modifier = Modifier.padding(top = 5.dp)
+                        modifier = Modifier
+                            .padding(top = 5.dp)
+                            .clickable {
+                                loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.RESET_PASSWORD))
+                            },
+                        text = "Forgot Password",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.primary
                     )
                 }
-                Text(
-                    modifier = Modifier
-                        .padding(top = 5.dp)
-                        .clickable {
-                            loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.RESET_PASSWORD))
-                        },
-                    text = "Forgot Password",
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.primary
-                )
             }
-        }
-        Box(modifier = Modifier.padding(bottom = 20.dp)) {
-            Column {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        loginPageViewModel.onEvent(LoginFormEvent.LoginFormSubmit)
-                    },
-                    enabled = loginPageUIState !is LoginPageUIState.RequestSending
-                ) {
+            Box(modifier = Modifier.padding(bottom = 20.dp)) {
+                Column {
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            loginPageViewModel.onEvent(LoginFormEvent.LoginFormSubmit)
+                        },
+                        enabled = loginPageUIState !is LoginPageUIState.RequestSending
+                    ) {
+                        Text(
+                            text = if(loginPageUIState is LoginPageUIState.RequestSending) {
+                                "Logging in..."
+                            } else {
+                                "Login"
+                            },
+                        )
+                    }
                     Text(
-                        text = if(loginPageUIState is LoginPageUIState.RequestSending) {
-                            "Logging in..."
-                        } else {
-                            "Login"
-                        }
+                        modifier = Modifier.padding(top = 5.dp),
+                        text = "You don't have an account?",
+                        color = MaterialTheme.colors.onSurface,
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(top = 5.dp)
+                            .clickable {
+                                loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.REGISTER))
+                            },
+                        text = "Register",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.primary
                     )
                 }
-                Text(
-                    modifier = Modifier.padding(top = 5.dp),
-                    text = "You don't have an account?"
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(top = 5.dp)
-                        .clickable {
-                            loginScreenViewModel.onEvent(LoginScreenEvent.LoginPageNavigate(page = LoginNavigatePage.REGISTER))
-                        },
-                    text = "Register",
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.primary
-                )
             }
         }
     }

@@ -7,14 +7,14 @@ import androidx.compose.runtime.compositionLocalOf
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.IViewModel
 
-val LocalViewModelProvider = compositionLocalOf<IViewModelProvider> {
+val LocalViewModelProvider = compositionLocalOf<IViewModelsProvider> {
     error("com.example.myapplication.providers.IViewModelProvider not set")
 }
 val LocalResourceProvider = compositionLocalOf<IResourcesProvider> {
     error("com.example.myapplication.providers.IResourcesProvider not set")
 }
 
-val viewModelProvider = ViewModelProvider()
+val viewModelProvider = ViewModelsProvider()
 
 @Composable
 fun LocalProvider(

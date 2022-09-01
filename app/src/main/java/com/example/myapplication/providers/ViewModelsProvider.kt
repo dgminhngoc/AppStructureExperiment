@@ -6,11 +6,11 @@ import com.example.myapplication.domain.IUserDataRepository
 import com.example.myapplication.domain.UserDataRepository
 import com.example.myapplication.viewmodel.*
 
-interface IViewModelProvider {
+interface IViewModelsProvider {
     fun <T: IViewModel> getViewModel(key: String): T
 }
 
-class ViewModelProvider: IViewModelProvider {
+class ViewModelsProvider: IViewModelsProvider {
     private val viewModels = mutableMapOf<String, IViewModel>()
 
     @Suppress("UNCHECKED_CAST")

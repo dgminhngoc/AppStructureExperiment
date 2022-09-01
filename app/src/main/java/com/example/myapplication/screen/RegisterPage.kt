@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.domain.RequestResult
 import com.example.myapplication.providers.LocalViewModelProvider
-import com.example.myapplication.providers.ViewModelProvider
+import com.example.myapplication.providers.ViewModelsProvider
 import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.*
@@ -38,7 +38,7 @@ import com.example.myapplication.viewmodel.*
 )
 @Composable
 fun RegisterPagePreview() {
-    val viewModels = ViewModelProvider()
+    val viewModels = ViewModelsProvider()
     MyApplicationTheme {
         CompositionLocalProvider(LocalViewModelProvider provides viewModels) {
             RegisterSuccessPage(LoginScreenViewModel())
@@ -401,7 +401,11 @@ fun RegisterFormPage(
                             ))
                         },
                     )
-                    Text(text = "Terms Accept", modifier = Modifier.padding(start = 0.dp))
+                    Text(
+                        text = "Terms Accept",
+                        modifier = Modifier.padding(start = 0.dp),
+                        color = MaterialTheme.colors.onSurface,
+                    )
                 }
                 registrationFormState.isTermsAcceptedError?.let {
                     Text(
@@ -473,12 +477,14 @@ fun RegisterSuccessPage(
             text = "ONE MORE STEP",
             fontWeight = FontWeight.Bold,
             fontSize = 17.sp,
+            color = MaterialTheme.colors.onSurface,
         )
 
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
             text = "Please open your email and click on the link to confirm your accout",
             textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.onSurface,
         )
 
         Text(
