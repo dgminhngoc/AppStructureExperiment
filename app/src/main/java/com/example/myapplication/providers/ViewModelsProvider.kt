@@ -1,9 +1,9 @@
 package com.example.myapplication.providers
 
-import com.example.myapplication.domain.ServerDataRepository
-import com.example.myapplication.domain.IServerDataRepository
-import com.example.myapplication.domain.IUserDataRepository
-import com.example.myapplication.domain.UserDataRepository
+import com.example.myapplication.data.ServerDataRepository
+import com.example.myapplication.data.IServerDataRepository
+import com.example.myapplication.data.IUserDataRepository
+import com.example.myapplication.data.UserDataRepository
 import com.example.myapplication.viewmodel.*
 
 interface IViewModelsProvider {

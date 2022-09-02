@@ -1,6 +1,6 @@
 package com.example.myapplication.viewmodel
 
-import com.example.myapplication.domain.IUserDataRepository
+import com.example.myapplication.data.IUserDataRepository
 import com.example.myapplication.models.User
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

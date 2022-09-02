@@ -1,4 +1,4 @@
-package com.example.myapplication.domain
+package com.example.myapplication.data
 
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.myapplication.models.User

@@ -1,9 +1,8 @@
-package com.example.myapplication.domain
+package com.example.myapplication.data
 
 import com.example.myapplication.models.*
-import com.google.gson.JsonObject
 import io.ktor.client.*
-import io.ktor.client.call.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 
@@ -15,11 +14,11 @@ interface IServerDataRepository {
     suspend fun register(firstName: String, lastName: String,
                          email: String, password: String,
                          authority: String): RequestResult<String>
-    suspend fun refreshAccessToken(user: User): RequestResult<User>
+    suspend fun refreshAccessToken(refreshToken: String): RequestResult<User>
 }
 
-class ServerDataRepository: IServerDataRepository {
-    companion object{
+class ServerDataRepository(private val refreshToken: String? = null): IServerDataRepository {
+    companion object API{
         private const val SERVER_URL = "https://example.com"
         private const val API_LOGIN = "/api/login"
         private const val API_REGISTER = "/api/user/registration"
@@ -27,9 +26,26 @@ class ServerDataRepository: IServerDataRepository {
         private const val API_ACCESS_TOKEN = "/oauth/access_token"
         private const val API_NEWS = "/api/news"
         private const val API_VIDEOS = "/api/videos"
+
+        private var accessToken: String? = null
+        private val httpClient = HttpClient()
     }
 
-    private var user: User? = null
+    init {
+        httpClient.plugin(HttpSend).intercept {request ->
+            val originalCall = execute(request)
+            if (originalCall.response.status == HttpStatusCode.Unauthorized) {
+                refreshToken?.let {
+                    refreshAccessToken(it)
+                }
+                execute(request)
+            }
+            else {
+                originalCall
+            }
+
+        }
+    }
 
     override suspend fun fetchNews(): RequestResult<List<News>> {
         var errorCode: Int? = null
@@ -40,7 +56,7 @@ class ServerDataRepository: IServerDataRepository {
                 headers {
                     append(
                         name = "Authorization",
-                        value = "bearer ${user?.accessToken}"
+                        value = "bearer $accessToken"
                     )
                     append(
                         name = "Accept-Version",
@@ -77,7 +93,7 @@ class ServerDataRepository: IServerDataRepository {
                 headers {
                     append(
                         name = "Authorization",
-                        value = "bearer ${user?.accessToken}"
+                        value = "bearer $accessToken"
                     )
                     append(
                         name = "Accept-Version",
@@ -151,7 +167,7 @@ class ServerDataRepository: IServerDataRepository {
 //            exception = e
 //        }
 
-        user = User(
+        val user = User(
             id = 0,
             email = "tim.nguyen@solunar.de",
             firstName = "Tim",
@@ -265,7 +281,7 @@ class ServerDataRepository: IServerDataRepository {
 //        )
     }
 
-    override suspend fun refreshAccessToken(user: User): RequestResult<User> {
+    override suspend fun refreshAccessToken(refreshToken: String): RequestResult<User> {
         var errorCode: Int? = null
         var exception: Exception? = null
         try {
@@ -281,13 +297,13 @@ class ServerDataRepository: IServerDataRepository {
                     )
                 }
                 setBody(
-                    body = "grant_type=refresh_token&refresh_token=${user.refreshToken}"
+                    body = "grant_type=refresh_token&refresh_token=$refreshToken"
                 )
             }
 
             when(response.status) {
                 HttpStatusCode.OK -> {
-                    this.user = User(
+                    val user = User(
                         id = 0,
                         email = "tim.nguyen@solunar.de",
                         firstName = "Tim",
@@ -296,7 +312,8 @@ class ServerDataRepository: IServerDataRepository {
                         refreshToken = "refresh_token",
                         userRole = "ROLE_USER"
                     )
-                    return RequestResult.OnSuccess(data = this.user)
+                    accessToken = user.accessToken
+                    return RequestResult.OnSuccess(data = user)
                 }
                 else -> {
                     errorCode = response.status.value

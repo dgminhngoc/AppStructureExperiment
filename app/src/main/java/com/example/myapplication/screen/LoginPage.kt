@@ -1,6 +1,5 @@
 package com.example.myapplication.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -24,7 +23,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.domain.RequestResult
+import com.example.myapplication.data.RequestResult
 import com.example.myapplication.providers.LocalViewModelProvider
 import com.example.myapplication.providers.ViewModelsProvider
 import com.example.myapplication.providers.ViewModels

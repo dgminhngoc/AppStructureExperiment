@@ -1,8 +1,8 @@
 package com.example.myapplication.viewmodel
 
 import android.util.Log
-import com.example.myapplication.domain.IServerDataRepository
-import com.example.myapplication.domain.RequestResult
+import com.example.myapplication.data.IServerDataRepository
+import com.example.myapplication.data.RequestResult
 import com.example.myapplication.validators.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
