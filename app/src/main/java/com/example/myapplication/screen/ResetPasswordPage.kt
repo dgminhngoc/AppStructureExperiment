@@ -103,6 +103,7 @@ fun ResetPasswordFormPage(
         ) {
             Text(
                 modifier = Modifier.padding(bottom = 10.dp),
+                color = MaterialTheme.colors.onSurface,
                 text = "Please enter the email address you used to create your WP account. We will then email you a link that you can use to reset your password",
             )
 
@@ -117,6 +118,9 @@ fun ResetPasswordFormPage(
                             email = email,
                         ))
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = MaterialTheme.colors.onSurface,
+                ),
                 isError = resetPasswordFormState.emailError != null,
                 placeholder = { Text("E-Mail") },
                 maxLines = 1,

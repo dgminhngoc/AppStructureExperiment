@@ -133,6 +133,9 @@ fun RegisterFormPage(
                             isRepeatedPasswordVisible = isRepeatedPasswordVisible,
                         ))
                     },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colors.onSurface,
+                    ),
                     isError = registrationFormState.emailError != null,
                     placeholder = { Text("E-Mail") },
                     maxLines = 1,
@@ -178,6 +181,9 @@ fun RegisterFormPage(
                             isRepeatedPasswordVisible = isRepeatedPasswordVisible,
                         ))
                     },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colors.onSurface,
+                    ),
                     isError = registrationFormState.passwordError != null,
                     placeholder = { Text("Password") },
                     maxLines = 1,
@@ -251,6 +257,9 @@ fun RegisterFormPage(
                             isRepeatedPasswordVisible = isRepeatedPasswordVisible,
                         ))
                     },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colors.onSurface,
+                    ),
                     isError = registrationFormState.repeatedPasswordError != null,
                     placeholder = { Text("Repeat password") },
                     maxLines = 1,
@@ -317,6 +326,9 @@ fun RegisterFormPage(
                             isRepeatedPasswordVisible = isRepeatedPasswordVisible,
                         ))
                     },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colors.onSurface,
+                    ),
                     isError = registrationFormState.firstNameError != null,
                     placeholder = { Text("First Name") },
                     maxLines = 1,
@@ -360,6 +372,9 @@ fun RegisterFormPage(
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done,
+                    ),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colors.onSurface,
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {

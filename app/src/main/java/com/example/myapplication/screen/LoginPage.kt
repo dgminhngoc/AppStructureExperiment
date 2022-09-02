@@ -112,6 +112,9 @@ fun LoginPage(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = loginPageUIState !is LoginPageUIState.RequestSending,
                         value = email,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            textColor = MaterialTheme.colors.onSurface,
+                        ),
                         onValueChange = {
                             email = it
                             loginPageViewModel.onEvent(LoginFormEvent.LoginFormChanged(
@@ -142,6 +145,9 @@ fun LoginPage(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 10.dp),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            textColor = MaterialTheme.colors.onSurface,
+                        ),
                         enabled = loginPageUIState !is LoginPageUIState.RequestSending,
                         visualTransformation =
                         if (isPasswordVisible) {
