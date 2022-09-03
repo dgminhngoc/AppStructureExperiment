@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.data.RequestResult
 import com.example.myapplication.providers.LocalViewModelProvider
-import com.example.myapplication.providers.ViewModelsProvider
+import com.example.myapplication.providers.ViewModelStore
 import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.*
@@ -30,7 +30,7 @@ import com.example.myapplication.viewmodel.*
 )
 @Composable
 fun ResetPasswordPagePreview() {
-    val viewModels = ViewModelsProvider()
+    val viewModels = ViewModelStore()
     MyApplicationTheme {
         CompositionLocalProvider(LocalViewModelProvider provides viewModels) {
             ResetPasswordPage()
@@ -40,10 +40,10 @@ fun ResetPasswordPagePreview() {
 
 @Composable
 fun ResetPasswordPage(
-    resetPasswordPageViewModel: IResetPasswordPageViewModel =
-        ViewModels.get(IResetPasswordPageViewModel::class.java.name),
-    loginScreenViewModel: ILoginScreenViewModel =
-        ViewModels.get(ILoginScreenViewModel::class.java.name),
+    resetPasswordPageViewModel: ResetPasswordPageViewModel =
+        ViewModels.get(ResetPasswordPageViewModel::class.java.name),
+    loginScreenViewModel: LoginScreenViewModel =
+        ViewModels.get(LoginScreenViewModel::class.java.name),
 ) {
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {
@@ -72,8 +72,8 @@ fun ResetPasswordPage(
 
 @Composable
 fun ResetPasswordFormPage(
-    resetPasswordPageViewModel: IResetPasswordPageViewModel,
-    loginScreenViewModel: ILoginScreenViewModel
+    resetPasswordPageViewModel: ResetPasswordPageViewModel,
+    loginScreenViewModel: LoginScreenViewModel
 ) {
     val resetPasswordFormState by resetPasswordPageViewModel.resetPasswordFormState.collectAsState()
     var email = resetPasswordFormState.email
@@ -180,7 +180,7 @@ fun ResetPasswordFormPage(
 
 @Composable
 fun ResetPasswordSuccessPage(
-    loginScreenViewModel: ILoginScreenViewModel
+    loginScreenViewModel: LoginScreenViewModel
 ) {
     Column(
         verticalArrangement = Arrangement.Center,

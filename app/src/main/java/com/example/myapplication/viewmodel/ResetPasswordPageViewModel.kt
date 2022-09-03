@@ -28,17 +28,16 @@ data class ResetPasswordFormState(
     val emailError: String? = null,
 )
 
-interface IResetPasswordPageViewModel: IViewModel {
-    val resetPasswordFormState: StateFlow<ResetPasswordFormState>
-    val resetPasswordPageUIState: StateFlow<ResetPasswordPageUIState>
-    fun onEvent(event: ResetPasswordFormEvent)
+abstract class ResetPasswordPageViewModel: BaseViewModel() {
+    abstract val resetPasswordFormState: StateFlow<ResetPasswordFormState>
+    abstract val resetPasswordPageUIState: StateFlow<ResetPasswordPageUIState>
+    abstract fun onEvent(event: ResetPasswordFormEvent)
 }
 
-class ResetPasswordPageViewModel(
+class ResetPasswordPageViewModelImpl(
     private val dataRepository: IServerDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
-    onDisposeAction: (() -> Unit)? = null
-): IResetPasswordPageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
+): ResetPasswordPageViewModel() {
 
     private val _resetPasswordFormState = MutableStateFlow(ResetPasswordFormState())
     override val resetPasswordFormState = _resetPasswordFormState.map { it }.stateIn(

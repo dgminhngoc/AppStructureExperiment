@@ -49,21 +49,20 @@ data class RegistrationFormState(
     val isTermsAcceptedError: String? = null,
 )
 
-interface IRegistrationPageViewModel: IViewModel {
-    val registrationFormState: StateFlow<RegistrationFormState>
-    val registrationPageUIState: StateFlow<RegistrationPageUIState>
-    fun onEvent(event: RegistrationFormEvent)
+abstract class RegistrationPageViewModel: BaseViewModel() {
+    abstract val registrationFormState: StateFlow<RegistrationFormState>
+    abstract val registrationPageUIState: StateFlow<RegistrationPageUIState>
+    abstract fun onEvent(event: RegistrationFormEvent)
 }
 
-class RegistrationPageViewModel(
+class RegistrationPageViewModelImpl(
     private val dataRepository: IServerDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
     private val passwordValidator: PasswordValidator = PasswordValidator(),
     private val repeatedPasswordValidator: RepeatedPasswordValidator = RepeatedPasswordValidator(),
     private val nameValidator: NameValidator = NameValidator(),
     private val termsAcceptedValidator: TermsAcceptedValidator = TermsAcceptedValidator(),
-    onDisposeAction: (() -> Unit)? = null
-): IRegistrationPageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
+): RegistrationPageViewModel() {
 
     private val _registrationFormState = MutableStateFlow(RegistrationFormState())
     override val registrationFormState = _registrationFormState.map { it }.stateIn(

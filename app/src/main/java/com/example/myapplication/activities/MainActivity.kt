@@ -9,7 +9,6 @@ import com.example.myapplication.providers.LocalProvider
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             LocalProvider {
                 App()

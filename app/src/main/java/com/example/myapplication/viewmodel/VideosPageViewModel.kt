@@ -1,11 +1,9 @@
 package com.example.myapplication.viewmodel
 
-interface IVideosPageViewModel: IViewModel {
+abstract class VideosPageViewModel: BaseViewModel() {
 
 }
 
-class VideosPageViewModel(
-    onDisposeAction: (() -> Unit)? = null
-): IVideosPageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
+class VideosPageViewModelImpl: VideosPageViewModel() {
 
 }

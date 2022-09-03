@@ -16,14 +16,12 @@ enum class LoginNavigatePage {
     RESET_PASSWORD,
 }
 
-interface ILoginScreenViewModel: IViewModel {
-    val selectedPageIndexState: StateFlow<LoginNavigatePage>
-    fun onEvent(event: LoginScreenEvent)
+abstract class LoginScreenViewModel: BaseViewModel() {
+    abstract val selectedPageIndexState: StateFlow<LoginNavigatePage>
+    abstract fun onEvent(event: LoginScreenEvent)
 }
 
-class LoginScreenViewModel(
-    onDisposeAction: (() -> Unit)? = null
-): ILoginScreenViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
+class LoginScreenViewModelImpl: LoginScreenViewModel() {
 
     private val _selectedPageIndexState = MutableStateFlow(LoginNavigatePage.LOGIN)
     override val selectedPageIndexState= _selectedPageIndexState.map { it }.stateIn(

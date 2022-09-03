@@ -7,15 +7,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.viewmodel.BottomNavTab
-import com.example.myapplication.viewmodel.IContactsPageViewModel
-import com.example.myapplication.viewmodel.IMainScreenViewModel
+import com.example.myapplication.viewmodel.ContactsPageViewModel
+import com.example.myapplication.viewmodel.MainScreenViewModel
 
 @Composable
 fun ContactsPage(
-    contactsPageViewModel: IContactsPageViewModel =
-        ViewModels.get(IContactsPageViewModel::class.java.name),
-    mainScreenViewModel: IMainScreenViewModel =
-        ViewModels.get(IMainScreenViewModel::class.java.name),
+    contactsPageViewModel: ContactsPageViewModel =
+        ViewModels.get(ContactsPageViewModel::class.java.name),
+    mainScreenViewModel: MainScreenViewModel =
+        ViewModels.get(MainScreenViewModel::class.java.name),
 ) {
     val mainScreenSelectedTabIndexState by mainScreenViewModel.selectedTabIndexState.collectAsState()
     DisposableEffect(mainScreenSelectedTabIndexState) {

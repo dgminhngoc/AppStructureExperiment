@@ -37,18 +37,17 @@ data class LoginFormState(
     val isPasswordVisible: Boolean = false
 )
 
-interface ILoginPageViewModel: IViewModel {
-    val loginFormState: StateFlow<LoginFormState>
-    val loginPageUIState: StateFlow<LoginPageUIState>
-    fun onEvent(event: LoginFormEvent)
+abstract class LoginPageViewModel: BaseViewModel() {
+    abstract val loginFormState: StateFlow<LoginFormState>
+    abstract val loginPageUIState: StateFlow<LoginPageUIState>
+    abstract fun onEvent(event: LoginFormEvent)
 }
 
-class LoginPageViewModel(
+class LoginPageViewModelImpl(
     private val dataRepository: IServerDataRepository,
     private val emailValidator: EmailValidator = EmailValidator(),
     private val passwordValidator: PasswordValidator = PasswordValidator(),
-    onDisposeAction: (() -> Unit)? = null
-): ILoginPageViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
+): LoginPageViewModel(){
 
     private val _loginFormState = MutableStateFlow(LoginFormState())
     override val loginFormState = _loginFormState.map { it }.stateIn(

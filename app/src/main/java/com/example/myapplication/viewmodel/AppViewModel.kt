@@ -19,15 +19,14 @@ enum class AppScreen{
     MAIN,
 }
 
-interface IAppViewModel: IViewModel {
-    val selectedScreenIndexState: StateFlow<AppScreen>
-    fun onUIEvent(event: UIEvent)
+abstract class AppViewModel: BaseViewModel() {
+    abstract val selectedScreenIndexState: StateFlow<AppScreen>
+    abstract fun onUIEvent(event: UIEvent)
 }
 
-class AppViewModel(
+class AppViewModelImpl(
     private val prefsRepository: IUserDataRepository,
-    onDisposeAction: (() -> Unit)? = null
-): IAppViewModel, BaseViewModel(onDisposeAction = onDisposeAction) {
+): AppViewModel() {
 
     private val _selectedScreenIndexState = MutableStateFlow(AppScreen.INIT_DATA)
     override val selectedScreenIndexState= _selectedScreenIndexState.map { it }.stateIn(

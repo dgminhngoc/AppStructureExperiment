@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.data.RequestResult
 import com.example.myapplication.providers.LocalViewModelProvider
-import com.example.myapplication.providers.ViewModelsProvider
+import com.example.myapplication.providers.ViewModelStore
 import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.*
@@ -36,7 +36,7 @@ import com.example.myapplication.viewmodel.*
 )
 @Composable
 fun LoginPagePreview() {
-    val provider = ViewModelsProvider()
+    val provider = ViewModelStore()
     MyApplicationTheme {
         CompositionLocalProvider(LocalViewModelProvider provides provider) {
             LoginPage()
@@ -46,12 +46,12 @@ fun LoginPagePreview() {
 
 @Composable
 fun LoginPage(
-    loginPageViewModel: ILoginPageViewModel =
-        ViewModels.get(ILoginPageViewModel::class.java.name),
-    loginScreenViewModel: ILoginScreenViewModel =
-        ViewModels.get(ILoginScreenViewModel::class.java.name),
-    appViewModel: IAppViewModel =
-        ViewModels.get(IAppViewModel::class.java.name),
+    loginPageViewModel: LoginPageViewModel =
+        ViewModels.get(LoginPageViewModel::class.java.name),
+    loginScreenViewModel: LoginScreenViewModel =
+        ViewModels.get(LoginScreenViewModel::class.java.name),
+    appViewModel: AppViewModel =
+        ViewModels.get(AppViewModel::class.java.name),
 ) {
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {

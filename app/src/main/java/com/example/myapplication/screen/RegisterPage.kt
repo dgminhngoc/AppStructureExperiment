@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.data.RequestResult
 import com.example.myapplication.providers.LocalViewModelProvider
-import com.example.myapplication.providers.ViewModelsProvider
+import com.example.myapplication.providers.ViewModelStore
 import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.*
@@ -38,20 +38,20 @@ import com.example.myapplication.viewmodel.*
 )
 @Composable
 fun RegisterPagePreview() {
-    val viewModels = ViewModelsProvider()
+    val viewModels = ViewModelStore()
     MyApplicationTheme {
         CompositionLocalProvider(LocalViewModelProvider provides viewModels) {
-            RegisterSuccessPage(LoginScreenViewModel())
+            RegisterSuccessPage(LoginScreenViewModelImpl())
         }
     }
 }
 
 @Composable
 fun RegisterPage(
-    registrationPageViewModel: IRegistrationPageViewModel =
-        ViewModels.get(IRegistrationPageViewModel::class.java.name),
-    loginScreenViewModel: ILoginScreenViewModel =
-        ViewModels.get(ILoginScreenViewModel::class.java.name)
+    registrationPageViewModel: RegistrationPageViewModel =
+        ViewModels.get(RegistrationPageViewModel::class.java.name),
+    loginScreenViewModel: LoginScreenViewModel =
+        ViewModels.get(LoginScreenViewModel::class.java.name)
 ) {
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {
@@ -80,8 +80,8 @@ fun RegisterPage(
 
 @Composable
 fun RegisterFormPage(
-    registrationPageViewModel: IRegistrationPageViewModel,
-    loginScreenViewModel: ILoginScreenViewModel
+    registrationPageViewModel: RegistrationPageViewModel,
+    loginScreenViewModel: LoginScreenViewModel
 ) {
     val registrationPageUIState by registrationPageViewModel.registrationPageUIState.collectAsState()
 
@@ -467,7 +467,7 @@ fun RegisterFormPage(
 
 @Composable
 fun RegisterSuccessPage(
-    loginScreenViewModel: ILoginScreenViewModel
+    loginScreenViewModel: LoginScreenViewModel
 ) {
     Column(
         verticalArrangement = Arrangement.Center,

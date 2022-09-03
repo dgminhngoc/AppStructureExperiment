@@ -7,15 +7,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.myapplication.providers.ViewModels
 import com.example.myapplication.viewmodel.BottomNavTab
-import com.example.myapplication.viewmodel.IMainScreenViewModel
-import com.example.myapplication.viewmodel.IVideosPageViewModel
+import com.example.myapplication.viewmodel.MainScreenViewModel
+import com.example.myapplication.viewmodel.VideosPageViewModel
 
 @Composable
 fun VideosPage(
-    videosPageViewModel: IVideosPageViewModel =
-        ViewModels.get(IVideosPageViewModel::class.java.name),
-    mainScreenViewModel: IMainScreenViewModel =
-        ViewModels.get(IMainScreenViewModel::class.java.name),
+    videosPageViewModel: VideosPageViewModel =
+        ViewModels.get(VideosPageViewModel::class.java.name),
+    mainScreenViewModel: MainScreenViewModel =
+        ViewModels.get(MainScreenViewModel::class.java.name),
 ) {
     val mainScreenSelectedTabIndexState by mainScreenViewModel.selectedTabIndexState.collectAsState()
     DisposableEffect(mainScreenSelectedTabIndexState) {

@@ -4,11 +4,19 @@ interface IViewModel {
     fun dispose()
 }
 
-abstract class BaseViewModel(
-    private val onDisposeAction: (() -> Unit)? = null
-): IViewModel {
+abstract class BaseViewModel: IViewModel {
+
+    private val disposeActions = mutableListOf<(() -> Unit)>()
+
+    fun addDisposeAction(action: () -> Unit) {
+        disposeActions.add(action)
+    }
 
     override fun dispose(){
-        onDisposeAction?.invoke()
+        disposeActions.forEach { action->
+            action.invoke()
+        }
+
+        disposeActions.clear()
     }
 }
