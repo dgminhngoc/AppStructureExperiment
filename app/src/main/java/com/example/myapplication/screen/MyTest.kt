@@ -32,9 +32,6 @@ fun AppNavTest(
     appViewModel: AppViewModelTest = viewModel()
 ) {
     val navController = rememberNavController()
-    BackHandler {
-
-    }
     NavHost(navController = navController, startDestination = "init_screen") {
         composable(route = "init_screen") {
             InitDataScreen()

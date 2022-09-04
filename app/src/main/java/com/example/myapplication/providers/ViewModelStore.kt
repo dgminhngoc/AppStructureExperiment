@@ -19,8 +19,7 @@ class ViewModelStoreImpl: IViewModelStore {
     private val viewModels = mutableMapOf<String, BaseViewModel>()
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T: BaseViewModel> getViewModel(key: String): T{
-
+    override fun <T: BaseViewModel> getViewModel(key: String): T {
         var viewModel = viewModels[key]
         if(viewModel == null) {
             viewModel = when(key) {

@@ -38,10 +38,10 @@ fun MainScreen(
                         label = { Text(item) },
                         selected = mainScreenSelectedTabIndexState.index == index,
                         onClick = { mainScreenViewModel.onEvent(when(index) {
-                            0 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.HOME)
-                            1 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.VIDEOS)
-                            2 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.PRODUCTS)
-                            3 -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.CONTACTS)
+                            BottomNavTab.HOME.index -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.HOME)
+                            BottomNavTab.VIDEOS.index -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.VIDEOS)
+                            BottomNavTab.PRODUCTS.index -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.PRODUCTS)
+                            BottomNavTab.CONTACTS.index -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.CONTACTS)
                             else -> MainScreenEvent.MainBottomTabNavigate(tab = BottomNavTab.HOME)
                         }) }
                     )
