@@ -7,15 +7,13 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.providers.ViewModels
+import com.example.myapplication.providers.getViewModel
 import com.example.myapplication.viewmodel.*
 
 @Composable
 fun MainScreen(
-    mainScreenViewModel: MainScreenViewModel =
-        ViewModels.get(MainScreenViewModel::class.java.name),
-    appViewModel: AppViewModel =
-        ViewModels.get(AppViewModel::class.java.name),
+    mainScreenViewModel: MainScreenViewModel = getViewModel(),
+    appViewModel: AppViewModel = getViewModel(),
 ) {
 
     val appSelectedScreenIndexState by appViewModel.selectedScreenIndexState.collectAsState()

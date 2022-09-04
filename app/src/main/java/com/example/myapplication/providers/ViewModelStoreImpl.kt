@@ -6,16 +6,20 @@ import com.example.myapplication.data.IUserDataRepository
 import com.example.myapplication.data.UserDataRepository
 import com.example.myapplication.viewmodel.*
 
+interface IViewModelStoreOwner {
+    fun getViewModelStore() : IViewModelStore
+}
+
 interface IViewModelStore {
-    fun <T: IViewModel> getViewModel(key: String): T
+    fun <T: BaseViewModel> getViewModel(key: String): T
     fun clear()
 }
 
-class ViewModelStore: IViewModelStore {
-    private val viewModels = mutableMapOf<String, IViewModel>()
+class ViewModelStoreImpl: IViewModelStore {
+    private val viewModels = mutableMapOf<String, BaseViewModel>()
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T: IViewModel> getViewModel(key: String): T{
+    override fun <T: BaseViewModel> getViewModel(key: String): T{
 
         var viewModel = viewModels[key]
         if(viewModel == null) {
@@ -56,9 +60,7 @@ class ViewModelStore: IViewModelStore {
             }
 
             viewModels[key] = viewModel
-            if(viewModel is BaseViewModel) {
-                viewModel.addDisposeAction { removeViewModel(key)}
-            }
+            viewModel.addDisposeAction { removeViewModel(key)}
         }
 
         return viewModel as T
@@ -73,7 +75,7 @@ class ViewModelStore: IViewModelStore {
     }
 
     private fun removeViewModel(key: String) {
-        val viewModel: IViewModel? = viewModels[key]
+        val viewModel: BaseViewModel? = viewModels[key]
         viewModel?.let {
             viewModels.remove(key)
         }

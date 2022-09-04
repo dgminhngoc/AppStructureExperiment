@@ -5,17 +5,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.example.myapplication.providers.ViewModels
+import com.example.myapplication.providers.getViewModel
 import com.example.myapplication.viewmodel.BottomNavTab
 import com.example.myapplication.viewmodel.HomePageViewModel
 import com.example.myapplication.viewmodel.MainScreenViewModel
 
 @Composable
 fun HomePage(
-    homePageViewModel: HomePageViewModel =
-        ViewModels.get(HomePageViewModel::class.java.name),
-    mainScreenViewModel: MainScreenViewModel =
-        ViewModels.get(MainScreenViewModel::class.java.name),
+    homePageViewModel: HomePageViewModel = getViewModel(),
+    mainScreenViewModel: MainScreenViewModel = getViewModel(),
 ) {
     val mainScreenSelectedTabIndexState by mainScreenViewModel.selectedTabIndexState.collectAsState()
     DisposableEffect(mainScreenSelectedTabIndexState) {

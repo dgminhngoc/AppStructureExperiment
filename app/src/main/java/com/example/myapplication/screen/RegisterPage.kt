@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.data.RequestResult
 import com.example.myapplication.providers.LocalViewModelProvider
-import com.example.myapplication.providers.ViewModelStore
-import com.example.myapplication.providers.ViewModels
+import com.example.myapplication.providers.ViewModelStoreImpl
+import com.example.myapplication.providers.getViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.*
 
@@ -38,7 +38,7 @@ import com.example.myapplication.viewmodel.*
 )
 @Composable
 fun RegisterPagePreview() {
-    val viewModels = ViewModelStore()
+    val viewModels = ViewModelStoreImpl()
     MyApplicationTheme {
         CompositionLocalProvider(LocalViewModelProvider provides viewModels) {
             RegisterSuccessPage(LoginScreenViewModelImpl())
@@ -48,10 +48,8 @@ fun RegisterPagePreview() {
 
 @Composable
 fun RegisterPage(
-    registrationPageViewModel: RegistrationPageViewModel =
-        ViewModels.get(RegistrationPageViewModel::class.java.name),
-    loginScreenViewModel: LoginScreenViewModel =
-        ViewModels.get(LoginScreenViewModel::class.java.name)
+    registrationPageViewModel: RegistrationPageViewModel = getViewModel(),
+    loginScreenViewModel: LoginScreenViewModel = getViewModel(),
 ) {
     val loginSelectedPageIndexState by loginScreenViewModel.selectedPageIndexState.collectAsState()
     DisposableEffect(loginSelectedPageIndexState) {

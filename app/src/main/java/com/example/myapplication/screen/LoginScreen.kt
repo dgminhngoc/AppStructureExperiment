@@ -14,15 +14,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.providers.ViewModels
+import com.example.myapplication.providers.getViewModel
 import com.example.myapplication.viewmodel.*
 
 @Composable
 fun LoginScreen(
-    loginScreenViewModel: LoginScreenViewModel =
-        ViewModels.get(LoginScreenViewModel::class.java.name),
-    appViewModel: AppViewModel =
-        ViewModels.get(AppViewModel::class.java.name),
+    loginScreenViewModel: LoginScreenViewModel = getViewModel(),
+    appViewModel: AppViewModel = getViewModel(),
 ) {
     val appSelectedScreenIndexState by appViewModel.selectedScreenIndexState.collectAsState()
     DisposableEffect(appSelectedScreenIndexState) {

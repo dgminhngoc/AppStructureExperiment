@@ -1,13 +1,20 @@
 package com.example.myapplication.screen
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.viewmodel.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,10 +22,42 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-
 sealed class UIEventTest {
     object Login: UIEventTest()
     object Logout: UIEventTest()
+}
+
+@Composable
+fun AppNavTest(
+    appViewModel: AppViewModelTest = viewModel()
+) {
+    val navController = rememberNavController()
+    BackHandler {
+
+    }
+    NavHost(navController = navController, startDestination = "init_screen") {
+        composable(route = "init_screen") {
+            InitDataScreen()
+        }
+        composable(route = "login_screen") {
+            LoginScreenTest(appViewModel = appViewModel)
+        }
+        composable(route = "main_screen") {
+            MainScreenTest(appViewModel = appViewModel)
+        }
+    }
+
+    when(appViewModel.selectedScreenIndexState.collectAsState().value) {
+        AppScreen.INIT_DATA -> {
+            navController.navigate("init_screen")
+        }
+        AppScreen.LOGIN -> {
+            navController.navigate("login_screen")
+        }
+        AppScreen.MAIN -> {
+            navController.navigate("main_screen")
+        }
+    }
 }
 
 @Composable
@@ -52,16 +91,29 @@ fun LoginScreenTest(
         }
     }
 
-    Column{
-        Text(text = "Login: ${loginScreenViewModel.name}")
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                loginScreenViewModel.name = "LoginScreenViewModelTest CHANGED"
-                appViewModel.onUIEvent(UIEventTest.Login)
+    val loginScreenState = loginScreenViewModel.loginScreenState.collectAsState()
+
+    Box(modifier = Modifier.background(color = loginScreenState.value.backgroundColor)) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+        ){
+            Text(text = "Login: ${loginScreenState.value.name}")
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    loginScreenViewModel.change()
+                }
+            ) {
+                Text(text = "Change")
             }
-        ) {
-            Text(text = "Login")
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    appViewModel.onUIEvent(UIEventTest.Login)
+                }
+            ) {
+                Text(text = "Login")
+            }
         }
     }
 }
@@ -79,17 +131,28 @@ fun MainScreenTest(
             }
         }
     }
-
-    Column {
-        Text(text = "Main: ${mainScreenViewModel.name}")
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                mainScreenViewModel.name = "MainScreenViewModelTest CHANGED"
-                appViewModel.onUIEvent(UIEventTest.Logout)
-            }
+    val mainScreenState = mainScreenViewModel.mainScreenState.collectAsState()
+    Box(modifier = Modifier.background(color = mainScreenState.value.backgroundColor)) {
+        Column(
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Logout")
+            Text(text = "Main: ${mainScreenState.value.name}")
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    mainScreenViewModel.change()
+                }
+            ) {
+                Text(text = "Change")
+            }
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    appViewModel.onUIEvent(UIEventTest.Logout)
+                }
+            ) {
+                Text(text = "Logout")
+            }
         }
     }
 }
@@ -142,11 +205,29 @@ class AppViewModelTest: ViewModel() {
     }
 }
 
+data class LoginScreenState(
+    val name: String = "LoginScreenViewModelTest",
+    val backgroundColor: Color= Color.White
+)
+
 class LoginScreenViewModelTest: ViewModel() {
-    var name:String = "LoginScreenViewModelTest"
+
+    private val _loginScreenState = MutableStateFlow(LoginScreenState())
+    val loginScreenState= _loginScreenState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _loginScreenState.value
+    )
 
     init {
         Log.d("test", "LoginScreenViewModelTest init")
+    }
+
+    fun change() {
+        _loginScreenState.value = LoginScreenState(
+            name = "LoginScreenViewModelTest CHANGED",
+            backgroundColor = Color.Blue
+        )
     }
 
     fun dispose() {
@@ -159,11 +240,29 @@ class LoginScreenViewModelTest: ViewModel() {
         Log.d("test", "LoginScreenViewModelTest onCleared")
     }
 }
+
+data class MainScreenState(
+    val name: String = "MainScreenViewModelTest",
+    val backgroundColor: Color= Color.White
+)
+
 class MainScreenViewModelTest: ViewModel() {
-    var name:String = "MainScreenViewModelTest"
+    private val _mainScreenState = MutableStateFlow(MainScreenState())
+    val mainScreenState= _mainScreenState.map { it }.stateIn(
+        CoroutineScope(Dispatchers.Main),
+        SharingStarted.Eagerly,
+        _mainScreenState.value
+    )
 
     init {
         Log.d("test", "MainScreenViewModelTest init")
+    }
+
+    fun change() {
+        _mainScreenState.value = MainScreenState(
+            name = "MainScreenViewModelTest CHANGED",
+            backgroundColor = Color.Green
+        )
     }
 
     fun dispose() {
