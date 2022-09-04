@@ -132,7 +132,7 @@ fun LoginPage(
                     )
                     loginFormState.emailError?.let {
                         Text(
-                            text = it,
+                            text = it.asString(),
                             color = MaterialTheme.colors.error,
                             style = MaterialTheme.typography.caption,
                             modifier = Modifier.padding(top = 5.dp)
@@ -197,7 +197,7 @@ fun LoginPage(
                     )
                     loginFormState.passwordError?.let {
                         Text(
-                            text = it,
+                            text = it.asString(),
                             color = MaterialTheme.colors.error,
                             style = MaterialTheme.typography.caption,
                             modifier = Modifier.padding(top = 5.dp)

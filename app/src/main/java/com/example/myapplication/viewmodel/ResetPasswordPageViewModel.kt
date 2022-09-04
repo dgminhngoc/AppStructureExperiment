@@ -3,6 +3,7 @@ package com.example.myapplication.viewmodel
 import android.util.Log
 import com.example.myapplication.data.IServerDataRepository
 import com.example.myapplication.data.RequestResult
+import com.example.myapplication.ui.UIString
 import com.example.myapplication.validators.EmailValidator
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -25,7 +26,7 @@ sealed class ResetPasswordPageUIState {
 
 data class ResetPasswordFormState(
     val email: String = "",
-    val emailError: String? = null,
+    val emailError: UIString? = null,
 )
 
 abstract class ResetPasswordPageViewModel: BaseViewModel() {

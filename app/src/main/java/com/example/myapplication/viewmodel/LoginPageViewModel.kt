@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.myapplication.data.IServerDataRepository
 import com.example.myapplication.data.RequestResult
 import com.example.myapplication.models.User
+import com.example.myapplication.ui.UIString
 import com.example.myapplication.validators.EmailValidator
 import com.example.myapplication.validators.PasswordValidator
 import kotlinx.coroutines.*
@@ -31,9 +32,9 @@ sealed class LoginPageUIState {
 
 data class LoginFormState(
     val email: String = "",
-    val emailError: String? = null,
+    val emailError: UIString? = null,
     val password: String = "",
-    val passwordError: String? = null,
+    val passwordError: UIString? = null,
     val isPasswordVisible: Boolean = false
 )
 

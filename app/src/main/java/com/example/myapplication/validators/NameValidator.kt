@@ -1,11 +1,16 @@
 package com.example.myapplication.validators
 
+import com.example.myapplication.R
+import com.example.myapplication.ui.UIString
+
 class NameValidator {
     fun validate(name: String) : ValidationResult {
         if(name.isBlank()) {
             return ValidationResult(
                 isSuccessful = false,
-                errorMessage = "Your name can not be blank"
+                errorMessage = UIString.DynamicString(
+                    resId = R.string.validation_error_name_blank
+                )
             )
         }
 

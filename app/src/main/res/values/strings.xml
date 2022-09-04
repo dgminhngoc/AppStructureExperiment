@@ -1,4 +1,12 @@
 <resources>
-    <string name="app_name">My Application</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="app_name" translatable="false">My Application</string>
+    <string name="title_activity_main" translatable="false">MainActivity</string>
+
+    <!--Validation errors -->
+    <string name="validation_error_email_blank">E-Mail can not be blank</string>
+    <string name="validation_error_email_not_valid">E-Mail is not valid</string>
+    <string name="validation_error_name_blank">Name can not be blank</string>
+    <string name="validation_error_password_length">Password must consist of at least 8 characters</string>
+    <string name="validation_error_passwords_dont_match">Passwords do not match</string>
+    <string name="validation_error_terms_not_accepted">Please accept the terms</string>
 </resources>

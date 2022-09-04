@@ -3,6 +3,7 @@ package com.example.myapplication.viewmodel
 import android.util.Log
 import com.example.myapplication.data.IServerDataRepository
 import com.example.myapplication.data.RequestResult
+import com.example.myapplication.ui.UIString
 import com.example.myapplication.validators.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -34,19 +35,19 @@ sealed class RegistrationPageUIState {
 
 data class RegistrationFormState(
     val firstName: String = "",
-    val firstNameError: String? = null,
+    val firstNameError: UIString? = null,
     val lastname: String = "",
-    val lastnameError: String? = null,
+    val lastnameError: UIString? = null,
     val email: String = "",
-    val emailError: String? = null,
+    val emailError: UIString? = null,
     val password: String = "",
-    val passwordError: String? = null,
+    val passwordError: UIString? = null,
     val isPasswordVisible: Boolean = false,
     val repeatedPassword: String = "",
-    val repeatedPasswordError: String? = null,
+    val repeatedPasswordError: UIString? = null,
     val isRepeatedPasswordVisible: Boolean = false,
     val isTermsAccepted: Boolean = false,
-    val isTermsAcceptedError: String? = null,
+    val isTermsAcceptedError: UIString? = null,
 )
 
 abstract class RegistrationPageViewModel: BaseViewModel() {

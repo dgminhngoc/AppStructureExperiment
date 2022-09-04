@@ -146,7 +146,7 @@ fun RegisterFormPage(
                 )
                 registrationFormState.emailError?.let {
                     Text(
-                        text = it,
+                        text = it.asString(),
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier.padding(top = 5.dp)
@@ -222,7 +222,7 @@ fun RegisterFormPage(
                 )
                 registrationFormState.passwordError?.let {
                     Text(
-                        text = it,
+                        text = it.asString(),
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier.padding(top = 5.dp)
@@ -298,7 +298,7 @@ fun RegisterFormPage(
                 )
                 registrationFormState.repeatedPasswordError?.let {
                     Text(
-                        text = it,
+                        text = it.asString(),
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier.padding(top = 5.dp)
@@ -339,7 +339,7 @@ fun RegisterFormPage(
                 )
                 registrationFormState.firstNameError?.let {
                     Text(
-                        text = it,
+                        text = it.asString(),
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier.padding(top = 5.dp)
@@ -382,7 +382,7 @@ fun RegisterFormPage(
                 )
                 registrationFormState.lastnameError?.let {
                     Text(
-                        text = it,
+                        text = it.asString(),
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier.padding(top = 5.dp)
@@ -422,7 +422,7 @@ fun RegisterFormPage(
                 }
                 registrationFormState.isTermsAcceptedError?.let {
                     Text(
-                        text = it,
+                        text = it.asString(),
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier.padding(top = 5.dp)

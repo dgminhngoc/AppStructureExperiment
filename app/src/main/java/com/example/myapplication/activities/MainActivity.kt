@@ -9,11 +9,14 @@ import com.example.myapplication.providers.*
 import com.example.myapplication.screen.App
 
 class MainActivity : ComponentActivity() {
+
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val mainActivityViewModel: MainActivityViewModel by viewModels()
         val viewModelStore = mainActivityViewModel.getViewModelStore()
+
         setContent {
             LocalProvider(
                 viewModelStore = viewModelStore,
